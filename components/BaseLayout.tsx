@@ -2,9 +2,8 @@ import { Contract, WalletConnection } from 'near-api-js';
 import { useRouter } from 'next/router'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useAppContext } from 'context/state';
-import Nav from './Nav'
-import { Notification } from './Notification';
-
+import Header from './Header';
+import Footer from './Footer';
 interface BaseLayoutProps {
   children: React.ReactNode
 }
@@ -27,10 +26,10 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
   // }, [])
 
   return (
-    <div className="bg-primary min-h-screen p-4 md:p-6 text-white ">
-      <Nav />
-      <Notification />
+    <div className="bg-white min-h-screen">
+      <Header />
       {children}
+      <Footer />
     </div>
   )
 }

@@ -1,4 +1,5 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || "phamnhut.testnet"; // line 1
+const CONTRACT_NFT = process.env.NEXT_PUBLIC_NFT_CONTRACT || "nft-contract-test.phamnhut.testnet";
+const CONTRACT_MARKETPLACE = process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT || "nft-market-test.phamnhut.testnet";
 
 function environment(env: string) {
   switch (env) {
@@ -6,7 +7,8 @@ function environment(env: string) {
       return {
         networkId: "mainnet",
         nodeUrl: "https://rpc.mainnet.near.org",
-        contractName: CONTRACT_NAME,
+        contractNFT: CONTRACT_NFT,
+        contractMarketplace: CONTRACT_MARKETPLACE,
         walletUrl: "https://wallet.near.org",
         helperUrl: "https://helper.mainnet.near.org",
         explorerUrl: "https://explorer.mainnet.near.org",
@@ -15,7 +17,8 @@ function environment(env: string) {
       return {
         networkId: "testnet",
         nodeUrl: "https://rpc.testnet.near.org",
-        contractName: CONTRACT_NAME,
+        contractNFT: CONTRACT_NFT,
+        contractMarketplace: CONTRACT_MARKETPLACE,
         walletUrl: "https://wallet.testnet.near.org",
         helperUrl: "https://helper.testnet.near.org",
         explorerUrl: "https://explorer.testnet.near.org",

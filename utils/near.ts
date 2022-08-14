@@ -7,7 +7,8 @@ const nearEnv = environment("testnet");
 declare const window: {
   walletConnection: WalletConnection;
   accountId: any;
-  contract: Contract;
+  contractNFT: Contract;
+  contractMarketplace: Contract;
   location: any;
 };
 
@@ -20,12 +21,22 @@ export async function initializeContract() {
   );
   window.walletConnection = new WalletConnection(near, null);
   window.accountId = window.walletConnection.getAccountId();
-  window.contract = new Contract(
+  window.contractNFT = new Contract(
     window.walletConnection.account(),
-    nearEnv.contractName,
+    nearEnv.contractNFT,
     {
-      viewMethods: [], // TODO
-      changeMethods: [], // TODO
+      viewMethods: ["nft_token", "nft_tokens_for_owner"], // TODO
+      changeMethods: ["nft_mint", "nft_transfer", "nft_approve", "nft_update"], // TODO
+    }
+  );
+  window.contractMarketplace = new Contract(
+    window.walletConnection.account(),
+    nearEnv.contractMarketplace,
+    {
+      viewMethods: ["storage_balance_of", "get_sale", "get_bid_rent_by_account_id", "get_rent_by_token_id"], // TODO
+      changeMethods: ["storage_deposit", "update_price", "offer", "bid_token", "get_bid_token_by_token_id", "accept_bid_token",
+      "bid_rent"    
+    ], // TODO
     }
   );
 }
@@ -42,7 +53,7 @@ export async function getAccountId() {
 }
 
 export function login() {
-  window.walletConnection.requestSignIn(nearEnv.contractName);
+  window.walletConnection.requestSignIn(nearEnv.contractMarketplace);
 }
 
 export function logout() {

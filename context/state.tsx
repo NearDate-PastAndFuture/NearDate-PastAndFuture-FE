@@ -2,12 +2,18 @@ import { Contract, WalletConnection } from 'near-api-js';
 import React, { createContext, ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { accountBalance } from 'utils/near';
 
-interface State { account?: any; contract?: any; balance?: string };
+interface State {
+  account?: any;
+  contractNFT?: any;
+  contractMarketplace?: any;
+  balance?: string
+};
 
 declare const window: {
   walletConnection: WalletConnection;
   accountId: any;
-  contract: Contract;
+  contractNFT: Contract;
+  contractMarketplace: Contract;
   location: any;
 };
 
@@ -15,12 +21,14 @@ const AppContext = createContext<State>({});
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const [account, setaccount] = useState<any>(null)
-  const [contract, setContract] = useState<any>(null)
+  const [contractNFT, setContractNFT] = useState<any>(null)
+  const [contractMarketplace, setContractMarketplace] = useState<any>(null)
   const [balance, setBalance] = useState("0");
 
   useEffect(() => {
     setaccount(window.walletConnection?.account())
-    setContract(window.contract)
+    setContractNFT(window.contractNFT)
+    setContractMarketplace(window.contractMarketplace)
   }, [])
 
 
@@ -35,7 +43,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
 
   const state: State = {
     account,
-    contract,
+    contractNFT: contractNFT,
+    contractMarketplace: contractMarketplace,
     balance
   }
   return (
