@@ -34,8 +34,9 @@ export async function initializeContract() {
     nearEnv.contractMarketplace,
     {
       viewMethods: ["storage_balance_of", "get_sale", "get_bid_rent_by_account_id", "get_rent_by_token_id"], // TODO
-      changeMethods: ["storage_deposit", "update_price", "offer", "bid_token", "get_bid_token_by_token_id", "accept_bid_token",
-      "bid_rent"    
+      changeMethods: ["storage_deposit", "update_price", "offer", "remove_sale", "get_sales_by_nft_contract_id",
+      "bid_token", "get_bid_token_by_token_id", "accept_bid_token", "get_bid_token_on_nft_by_account_id", "bid_token_cancel_and_withdraw",
+      "bid_rent", "get_bid_rent_on_nft_by_account_id", 
     ], // TODO
     }
   );

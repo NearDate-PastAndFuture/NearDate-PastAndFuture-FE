@@ -5,6 +5,7 @@ import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
 import NFTItemCard from "components/nft/NFTItemCard";
 import { NFTModel } from "types";
+import { loading_screen } from 'utils/loading';
  
 const Marketplace: NextPage = () => {
   const { account, contractMarketplace, contractNFT } = useAppContext()
@@ -13,17 +14,16 @@ const Marketplace: NextPage = () => {
 
   useEffect(() => {
     async function getListNFT() {
-      if (!account) return;
-      try {
-        // let data = await contractMarketplace.get_sale({
-        //   "nft_contract_token": "nft-contract-test.hdtung.testnet"
-        // })
-        // let data = await contractNFT.nft_token_for_owner();
-
-        // console.log(data);
-      } catch (err) {
-        console.log(err);
-      }
+      if (!account || !contractMarketplace || !contractNFT) return;
+      loading_screen(async ()=> {
+        let data = await contractMarketplace.get_sales_by_nft_contract_id({
+          "nft_contract_id": contractNFT.contractId,
+          "from_index": "0",
+          "limit": 100
+        })
+        console.log("get_sales_by_nft_contract_id", data);
+        setListNFT(data);
+      })
     };
     getListNFT();
   }, [account, contractMarketplace, contractNFT]);
@@ -128,7 +128,7 @@ const Marketplace: NextPage = () => {
           </div>
           <div className="lg:col-span-3 px-2">
             <div className='my-2'>
-              <span className=' font-bold'>Tổng số 10</span>
+              <span className=' font-bold'>Tổng số {listNFT.length}</span>
             </div>
 
             <section className="text-gray-600 body-font">

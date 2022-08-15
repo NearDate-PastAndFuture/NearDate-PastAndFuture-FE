@@ -36,10 +36,21 @@ const MyNearDate: NextPage = () => {
       </Head>
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
-          <div className="flex flex-wrap -m-4">
+          <nav className="flex text-sm font-medium border-b border-gray-100">
+            <button className="cursor-pointer p-4 -mb-px border-b border-current text-cyan-500">
+              Your NFT
+            </button>
+            <button className="cursor-pointer p-4 -mb-px border-b border-transparent hover:text-cyan-500">
+              Bid
+            </button>
+            <button className="cursor-pointer p-4 -mb-px border-b border-transparent hover:text-cyan-500">
+              Rent Slot
+            </button>
+          </nav>
+          <div className="mt-12 flex flex-wrap -m-4">
             {
               listNFT.map((e, i) => {
-                return (<NFTItemCard key={i} nft={e}/>);
+                return (<NFTItemCard key={i} nft={e} />);
               })
             }
           </div>

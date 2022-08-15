@@ -29,7 +29,9 @@ const NFTItem: NextPage = () => {
 
   const [transferAccountId, setTransferAccountId] = useState<string>("");
 
-  const [rent, setRent] = useState<number>(0);
+  const [anotherOffer, setAnotherOffer] = useState<NFTBidModel | null>(null);
+
+  const [rent, setRent] = useState<number | null>(null);
 
   const [listBid, setListBid] = useState<Array<NFTBidModel>>([]);
 
@@ -78,6 +80,23 @@ const NFTItem: NextPage = () => {
             "token_id": id?.toString(),
           });
           setListBid(getListBid);
+        } else {
+          let anotherOfferResp = await contractMarketplace.get_bid_token_on_nft_by_account_id({
+            "account_id": account.accountId,
+            "token_id": id?.toString(),
+          });
+          console.log("anotherOfferResp: ", anotherOfferResp);
+          if (anotherOfferResp.length == 0) {
+            anotherOfferResp = null
+          } else {
+            setAnotherOffer(anotherOfferResp[0]);
+          }
+
+          // let bid_rentData = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
+          //   "account_id": account.accountId,
+          //   "token_id": id?.toString()
+          // })
+
         }
 
         let message_data_resp = await fetch(data.message);
@@ -92,7 +111,7 @@ const NFTItem: NextPage = () => {
         console.log("rent_message_list", rent_message_list);
         if (rent_message_list != null) {
           setListRent([]);
-        } 
+        }
       })
     };
     getData();
@@ -180,7 +199,13 @@ const NFTItem: NextPage = () => {
   }
 
   async function onCancelSaleClick() {
-
+    loading_screen(async () => {
+      let data = await contractMarketplace.remove_sale({
+        "nft_contract_id": contractNFT.contractId,
+        "token_id": id?.toString(),
+      }, 30000000000000, "1");
+      router.reload();
+    })
   }
 
   async function onOfferSaleClick() {
@@ -191,6 +216,16 @@ const NFTItem: NextPage = () => {
       }, 30000000000000, utils.format.parseNearAmount(priceSale.toString()));
 
     }, "NearDate is offering")
+  }
+
+  async function onCancelBidOfferClick() {
+    loading_screen(async () => {
+      if (!anotherOffer) return;
+      let data = await contractMarketplace.bid_token_cancel_and_withdraw({
+        "bid_id": anotherOffer.bid_id
+      }, 30000000000000, "1");
+      setAnotherOffer(null);
+    })
   }
 
   async function onTransferClick() {
@@ -256,42 +291,42 @@ const NFTItem: NextPage = () => {
       confirmButtonText: 'Next',
       showLoaderOnConfirm: true,
     })
-    .then((result) => {
-      messageSlot = result.value;
-      return Swal.fire({
-        title: 'Your offer',
-        input: 'number',
-        text: "Price",
-        inputAttributes: {
-          autocapitalize: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Offer',
-        showLoaderOnConfirm: true,
-      });
-    })
-    .then((resutl2) => {
-      if (resutl2.isConfirmed) {
-        loading_screen(async () => {
-          const json_data = {
-            "rent_message": messageSlot,
-            "message_created_date": Date.now(),
-          };
-          let file_name = `${id?.toString}_slot_${Date.now()}.json`;
-          const file = new_json_file(json_data, file_name);
-          let domain = await ipfs.put([file]);
-          let ipfs_link_uploaded = get_ipfs_link(domain, file_name);
+      .then((result) => {
+        messageSlot = result.value;
+        return Swal.fire({
+          title: 'Your offer',
+          input: 'number',
+          text: "Price",
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Offer',
+          showLoaderOnConfirm: true,
+        });
+      })
+      .then((resutl2) => {
+        if (resutl2.isConfirmed) {
+          loading_screen(async () => {
+            const json_data = {
+              "rent_message": messageSlot,
+              "message_created_date": Date.now(),
+            };
+            let file_name = `${id?.toString}_slot_${Date.now()}.json`;
+            const file = new_json_file(json_data, file_name);
+            let domain = await ipfs.put([file]);
+            let ipfs_link_uploaded = get_ipfs_link(domain, file_name);
 
-          let data = contractMarketplace.bid_rent({
-            "token_id": id?.toString(),
-            "message": ipfs_link_uploaded,
-            "start_at": Date.now(),
-            "expire_at": 1 * 1000 * 24 * 60 * 60
-          }, 30000000000000, utils.format.parseNearAmount(resutl2.value.toString()));
+            let data = contractMarketplace.bid_rent({
+              "token_id": id?.toString(),
+              "message": ipfs_link_uploaded,
+              "start_at": Date.now(),
+              "expire_at": 1 * 1000 * 24 * 60 * 60
+            }, 30000000000000, utils.format.parseNearAmount(resutl2.value.toString()));
 
-        }, "NearDate is proccessing")
-      }
-    })
+          }, "NearDate is proccessing")
+        }
+      })
   }
 
   return (
@@ -323,11 +358,11 @@ const NFTItem: NextPage = () => {
               </div>
             </div>
             <div className='mt-5 flex flex-col justify-start'>
-            {
-              listSlotRent.map((e, i)=> {
-                return (<p key={e + i} className='mt-1 font-semibold'>{e}</p>);
-              })
-            }
+              {
+                listSlotRent.map((e, i) => {
+                  return (<p key={e + i} className='mt-1 font-semibold'>{e}</p>);
+                })
+              }
             </div>
           </div>
           <div className='col-span-2'>
@@ -360,22 +395,40 @@ const NFTItem: NextPage = () => {
 
             {
               !isOwner &&
-              <div className='flex flex-row justify-start gap-4'>
+              <div className='flex flex-row justify-start gap-4 items-center'>
                 {
                   isSale && (
-                    <button className='mt-5 bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
+                    <button className='bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
                       onClick={onOfferSaleClick}
                     >
                       Offer
                     </button>
                   )
                 }
-                <button className='mt-5 bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
-                  onClick={onOfferAnotherSaleClick}
-                >
-                  Make another offer
-                </button>
-                <button className='mt-5 bg-yellow-500 px-5 py-2 font-semibold hover:bg-yellow-600 rounded-md'
+                {
+                  anotherOffer != null && <>
+                    <button className='bg-blue-200 px-5 py-2 rounded-md cursor-default'
+                    >
+                      Your bid: {utils.format.formatNearAmount(anotherOffer.price)} NEAR
+                    </button>
+                    <button className='bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
+                      onClick={onCancelBidOfferClick}
+                    >
+                      Cancel Offer
+                    </button>
+                  </>
+                }
+                {
+                  anotherOffer == null && (
+                    <button className='bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
+                      onClick={onOfferAnotherSaleClick}
+                    >
+                      Make another offer
+                    </button>
+                  )
+                }
+
+                <button className='ml-5 bg-yellow-500 px-5 py-2 font-semibold hover:bg-yellow-600 rounded-md'
                   onClick={onRentSlotClick}
                 >
                   Rent Slot
@@ -489,7 +542,7 @@ const NFTItem: NextPage = () => {
                           <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.expires_at}</td>
                           <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
                           <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
-                            // onClick={() => onAccepBidClick(e.bid_id)}
+                          // onClick={() => onAccepBidClick(e.bid_id)}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

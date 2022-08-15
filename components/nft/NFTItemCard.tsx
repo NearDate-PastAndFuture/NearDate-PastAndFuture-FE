@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { NFTModel, NFTMessageModel } from "types";
 import Image from 'next/image';
 import { get_ipfs_link_image } from "utils/ipfs";
+import { utils } from "near-api-js";
 
 interface NFTItemCardProps {
     nft: NFTModel;
@@ -35,6 +36,7 @@ export default function NFTItemCard({ nft }: NFTItemCardProps) {
                 </a>
                 <div className="mt-4">
                     <h2 className="text-gray-900 title-font text-lg font-medium text-center truncate">{message?.message || "NFT Unaivalbale now"}</h2>
+                    {/* <span>{utils.format.formatNearAmount(nft)} NEAR</span> */}
                 </div>
             </div>
         </Link>
