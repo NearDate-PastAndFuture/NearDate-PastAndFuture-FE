@@ -4,7 +4,7 @@ import { useAppContext } from "context/state";
 import { NFTModel } from "types";
 
 export default function RandomNFT() {
-  const { account, contractMarketplace, contractNFT } = useAppContext()
+  const { account, contractNFT } = useAppContext()
 
   const [listNFT, setListNFT] = useState<Array<NFTModel>>([]);
 
@@ -12,11 +12,8 @@ export default function RandomNFT() {
     async function getListNFT() {
       if (!account) return;
       try {
-        // let data = await contractMarketplace.get_sale({
-        //   "nft_contract_token": "nft-contract-test.hdtung.testnet"
-        // })
-        let data = await contractNFT.nft_tokens_for_owner({
-          "account_id": account.accountId
+        let data = await contractNFT.get_random_nfts({
+          "number": 4
         });
 
         setListNFT(data);

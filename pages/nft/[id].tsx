@@ -6,7 +6,7 @@ import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { NFTMessageModel, NFTModel, NFTSaleModel, NFTBidModel, NFTSlotModel } from "types";
+import { NFTMessageModel, NFTModel, NFTSaleModel, NFTBidModel, NFTBidSlotModel, NFTSlotModel, NFTRentSlotModel } from "types";
 import ipfs, { get_ipfs_link, get_ipfs_link_image } from 'utils/ipfs';
 import { utils } from "near-api-js";
 import { loading_screen } from "utils/loading";
@@ -31,16 +31,11 @@ const NFTItem: NextPage = () => {
 
   const [anotherOffer, setAnotherOffer] = useState<NFTBidModel | null>(null);
 
-  const [rent, setRent] = useState<number | null>(null);
-
   const [listBid, setListBid] = useState<Array<NFTBidModel>>([]);
 
-  const [listRentSlot, setListRentSlot] = useState<Array<NFTSlotModel>>([]);
+  const [listBidSlot, setListBidSlot] = useState<Array<NFTBidSlotModel>>([]);
 
-  const [listSlotRent, setListRent] = useState([
-    "asdf asdf asdf asdf",
-    "Asdf asdf asdf a sdf a sdfa a sdf asdf a sdf as df asd fa sdf"
-  ]);
+  const [listSlotRent, setListRent] = useState<Array<NFTSlotModel>>([]);
 
   useEffect(() => {
     async function getData() {
@@ -80,22 +75,29 @@ const NFTItem: NextPage = () => {
             "token_id": id?.toString(),
           });
           setListBid(getListBid);
+
+          let bid_slot_list = await contractMarketplace.get_bid_rent_by_token_id({
+            "token_id": id?.toString()
+          })
+          setListBidSlot(bid_slot_list);
+
         } else {
           let anotherOfferResp = await contractMarketplace.get_bid_token_on_nft_by_account_id({
             "account_id": account.accountId,
             "token_id": id?.toString(),
           });
-          console.log("anotherOfferResp: ", anotherOfferResp);
+
           if (anotherOfferResp.length == 0) {
             anotherOfferResp = null
           } else {
             setAnotherOffer(anotherOfferResp[0]);
           }
 
-          // let bid_rentData = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
-          //   "account_id": account.accountId,
-          //   "token_id": id?.toString()
-          // })
+          let bid_slot_list = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
+            "token_id": id?.toString(),
+            "account_id": account.accountId,
+          })
+          setListBidSlot(bid_slot_list);
 
         }
 
@@ -104,13 +106,12 @@ const NFTItem: NextPage = () => {
 
         setMessage(message_data);
 
-        let rent_message_list = await contractMarketplace.get_rent_by_token_id({
+        let rent_message_list: NFTRentSlotModel = await contractMarketplace.get_rent_by_token_id({
           "token_id": id?.toString()
         })
 
-        console.log("rent_message_list", rent_message_list);
         if (rent_message_list != null) {
-          setListRent([]);
+          setListRent(rent_message_list.rented_slots);
         }
       })
     };
@@ -269,7 +270,7 @@ const NFTItem: NextPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         loading_screen(async () => {
-          let data = contractMarketplace.accept_bid_token({
+          let data = await contractMarketplace.accept_bid_token({
             "bid_id": bid_id,
           }, 30000000000000, "1");
 
@@ -292,6 +293,10 @@ const NFTItem: NextPage = () => {
       showLoaderOnConfirm: true,
     })
       .then((result) => {
+        if (!result.isConfirmed) {
+          Swal.close();
+          return;
+        }
         messageSlot = result.value;
         return Swal.fire({
           title: 'Your offer',
@@ -306,13 +311,14 @@ const NFTItem: NextPage = () => {
         });
       })
       .then((resutl2) => {
+        if (!resutl2) return;
         if (resutl2.isConfirmed) {
           loading_screen(async () => {
             const json_data = {
               "rent_message": messageSlot,
               "message_created_date": Date.now(),
             };
-            let file_name = `${id?.toString}_slot_${Date.now()}.json`;
+            let file_name = `${id?.toString()}_slot_${Date.now()}.json`;
             const file = new_json_file(json_data, file_name);
             let domain = await ipfs.put([file]);
             let ipfs_link_uploaded = get_ipfs_link(domain, file_name);
@@ -327,6 +333,30 @@ const NFTItem: NextPage = () => {
           }, "NearDate is proccessing")
         }
       })
+  }
+
+  async function onBidSlotClick(bid_id: number) {
+    Swal.fire({
+      title: 'You confirm',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        loading_screen(async () => {
+          if (isOwner) {
+            let data = await contractMarketplace.accept_bid_rent({
+              "bid_id": bid_id,
+              "token_id": id?.toString()
+            }, 30000000000000, "1");
+          } else {
+            let data = await contractMarketplace.bid_rent_cancel_and_widthdraw({
+              "bid_id": bid_id
+            }, 30000000000000, "1")
+          }
+          setListBidSlot(listBidSlot.filter((e) => e.bid_id != bid_id));
+        }, "NearDate is proccessing")
+      }
+    })
   }
 
   return (
@@ -351,6 +381,7 @@ const NFTItem: NextPage = () => {
                 </div>
                 <div className="w-full absolute p-8 transition-opacity opacity-0 border-black border-2 group-hover:opacity-100 group-hover:relative h-full">
                   <h2 className="mt-4 text-2xl font-medium">{message?.message}</h2>
+                  <p>Created at: {`${new Date(message?.token_created_date || Date.now()).toLocaleString("en-US")}`}</p>
                   <p>Last updated at: {`${new Date(message?.message_updated_date || Date.now()).toLocaleString("en-US")}`}</p>
                   <p className="mt-4">
                   </p>
@@ -360,7 +391,7 @@ const NFTItem: NextPage = () => {
             <div className='mt-5 flex flex-col justify-start'>
               {
                 listSlotRent.map((e, i) => {
-                  return (<p key={e + i} className='mt-1 font-semibold'>{e}</p>);
+                  return (<p key={e.starts_at} className='mt-1 font-semibold'>{e.rent_message}</p>);
                 })
               }
             </div>
@@ -466,7 +497,7 @@ const NFTItem: NextPage = () => {
                     <span className="text-xs font-medium text-gray-500">
                       Account ID
                     </span>
-                    <input className="w-full p-0 text-sm border-none focus:ring-0 outline-0" id="transfer" type="text" placeholder="phamnhut.testnet"
+                    <input className="w-full p-0 text-sm border-none focus:ring-0 outline-0" id="transfer" type="text" placeholder=""
                       value={transferAccountId}
                       onChange={(e) => setTransferAccountId(e.target.value)}
                     />
@@ -491,7 +522,7 @@ const NFTItem: NextPage = () => {
                         <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
                         <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Account ID</th>
                         <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
-                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap"></th>
+                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Accept</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -506,7 +537,7 @@ const NFTItem: NextPage = () => {
                                 onClick={() => onAccepBidClick(e.bid_id)}
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
                                 </svg>
                               </td>
                             </tr>
@@ -525,27 +556,29 @@ const NFTItem: NextPage = () => {
               <table className="min-w-full text-sm divide-y divide-gray-200">
                 <thead>
                   <tr className="bg-gray-50">
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Start At</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Account ID</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
+                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Message</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap"></th>
+                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
+                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
+                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
+                      {isOwner ? "Accept" : "Cancel"}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {
-                    listRentSlot.map((e, i) => {
+                    listBidSlot.map((e, i) => {
                       return (
                         <tr key={i}>
-                          <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.starts_at}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.renting_account_id}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.expires_at}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
+                          <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.message_url}</td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.starts_at} - {e.expires_at}</td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
                           <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
-                          // onClick={() => onAccepBidClick(e.bid_id)}
+                            onClick={() => onBidSlotClick(e.bid_id)}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
                             </svg>
                           </td>
                         </tr>

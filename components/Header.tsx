@@ -30,15 +30,19 @@ export default function Header({ }: HeaderProps) {
           <Link href="/" passHref>
             <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/" ? "font-bold" : ""}`}>Home</a>
           </Link>
-          <Link href="/mint" passHref>
-            <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/mint" ? "font-bold" : ""}`}>Mint</a>
-          </Link>
+          {
+            account?.accountId && <Link href="/mint" passHref>
+              <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/mint" ? "font-bold" : ""}`}>Mint</a>
+            </Link>
+          }
           <Link href="/marketplace" passHref>
             <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/marketplace" ? "font-bold" : ""}`}>Martketplace</a>
           </Link>
-          <Link href="/my-neardate" passHref>
-            <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/my-neardate" ? "font-bold" : ""}`}>My NearDate</a>
-          </Link>
+          {
+            account?.accountId && <Link href="/my-neardate" passHref>
+              <a className={`mr-5 hover:text-gray-900 cursor-pointer hover:underline" ${asPath == "/my-neardate" ? "font-bold" : ""}`}>My NearDate</a>
+            </Link>
+          }
         </nav>
         {/* <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Button
           <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4 ml-1" viewBox="0 0 24 24">

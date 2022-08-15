@@ -11,20 +11,20 @@ interface NFTItemCardProps {
 
 export default function NFTItemCard({ nft }: NFTItemCardProps) {
 
-    const [message, setMessage] = useState<NFTMessageModel>();
+    // const [message, setMessage] = useState<NFTMessageModel>();
 
-    useEffect(() => {
-        if (!nft.message) return;
-        fetch(nft.message)
-        .then(data => data.json())
-        .then( (e: NFTMessageModel) => {
-            setMessage(e);
-        })
-        .catch(err => console.log(err))
-    }, [nft]);
+    // useEffect(() => {
+    //     if (!nft.message) return;
+    //     fetch(nft.message)
+    //     .then(data => data.json())
+    //     .then( (e: NFTMessageModel) => {
+    //         setMessage(e);
+    //     })
+    //     .catch(err => console.log(err))
+    // }, [nft]);
 
     return (
-        <Link href={`/nft/${message?.id}`} passHref>
+        <Link href={`/nft/${nft?.token_id}`} passHref>
             <div className="lg:w-1/4 md:w-1/2 p-4 w-full cursor-pointer">
                 <a className="block relative rounded overflow-hidden h-64">
                     {
@@ -35,7 +35,7 @@ export default function NFTItemCard({ nft }: NFTItemCardProps) {
                     }
                 </a>
                 <div className="mt-4">
-                    <h2 className="text-gray-900 title-font text-lg font-medium text-center truncate">{message?.message || "NFT Unaivalbale now"}</h2>
+                    {/* <h2 className="text-gray-900 title-font text-lg font-medium text-center truncate">{message?.message || "NFT Unaivalbale now"}</h2> */}
                     {/* <span>{utils.format.formatNearAmount(nft)} NEAR</span> */}
                 </div>
             </div>

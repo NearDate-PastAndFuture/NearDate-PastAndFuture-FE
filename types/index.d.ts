@@ -60,4 +60,22 @@ export interface NFTSlotModel {
   starts_at: number;
   expires_at: number;
   rent_message: string;
+  message: string;
+}
+
+export interface NFTBidSlotModel {
+  bid_account_id: string;
+  bid_id: number;
+  expires_at: number;
+  message_url: string;
+  price: string;
+  starts_at: number;
+  token_id: string;
+}
+
+export interface NFTRentSlotModel {
+  owner_id: string;
+  token_id: string;
+  message_url: string;
+  rented_slots: Array<NFTSlotModel>;
 }

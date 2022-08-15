@@ -3,30 +3,30 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
-import NFTItemCard from "components/nft/NFTItemCard";
-import { NFTModel } from "types";
+import NFTSaleCard from "components/nft/NFTSaleCard";
+import { NFTModel, NFTSaleModel } from "types";
 import { loading_screen } from 'utils/loading';
  
 const Marketplace: NextPage = () => {
   const { account, contractMarketplace, contractNFT } = useAppContext()
 
-  const [listNFT, setListNFT] = useState<Array<NFTModel>>([]);
+  const [listNFT, setListNFT] = useState<Array<NFTSaleModel>>([]);
 
   useEffect(() => {
     async function getListNFT() {
-      if (!account || !contractMarketplace || !contractNFT) return;
+      if (!contractMarketplace || !contractNFT) return;
       loading_screen(async ()=> {
         let data = await contractMarketplace.get_sales_by_nft_contract_id({
           "nft_contract_id": contractNFT.contractId,
           "from_index": "0",
           "limit": 100
         })
-        console.log("get_sales_by_nft_contract_id", data);
+
         setListNFT(data);
       })
     };
     getListNFT();
-  }, [account, contractMarketplace, contractNFT]);
+  }, [contractMarketplace, contractNFT]);
 
   return (
     <BaseLayout>
@@ -49,30 +49,24 @@ const Marketplace: NextPage = () => {
               <form className="border-t border-gray-200 lg:border-t-0">
                 <fieldset>
                   <legend className="block w-full px-5 py-3 text-xs font-medium bg-gray-50">
-                    Type
+                    Holidays of the year by
                   </legend>
                   <div className="px-5 py-6 space-y-2">
                     <div className="flex items-center">
                       <input id="toy" type="checkbox" name="type[toy]" className="w-5 h-5 border-gray-300 rounded" />
                       <label htmlFor="toy" className="ml-3 text-sm font-medium">
-                        Toy
+                        VietNam
                       </label>
                     </div>
                     <div className="flex items-center">
                       <input id="game" type="checkbox" name="type[game]" className="w-5 h-5 border-gray-300 rounded" />
                       <label htmlFor="game" className="ml-3 text-sm font-medium">
-                        Game
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input id="outdoor" type="checkbox" name="type[outdoor]" className="w-5 h-5 border-gray-300 rounded" />
-                      <label htmlFor="outdoor" className="ml-3 text-sm font-medium">
-                        Outdoor
+                        US
                       </label>
                     </div>
                     <div className="pt-2">
                       <button type="button" className="text-xs text-gray-500 underline">
-                        Reset Type
+                        Reset
                       </button>
                     </div>
                   </div>
@@ -80,7 +74,7 @@ const Marketplace: NextPage = () => {
                 <div>
                   <fieldset>
                     <legend className="block w-full px-5 py-3 text-xs font-medium bg-gray-50">
-                      Age
+                      Price
                     </legend>
                     <div className="px-5 py-6 space-y-2">
                       <div className="flex items-center">
@@ -109,7 +103,7 @@ const Marketplace: NextPage = () => {
                       </div>
                       <div className="pt-2">
                         <button type="button" className="text-xs text-gray-500 underline">
-                          Reset Age
+                          Reset
                         </button>
                       </div>
                     </div>
@@ -136,7 +130,7 @@ const Marketplace: NextPage = () => {
                 <div className="flex flex-wrap -m-4">
                   {
                     listNFT.map((e, i) => {
-                      return (<NFTItemCard key={i} nft={e}/>);
+                      return (<NFTSaleCard key={i} nft={e}/>);
                     })
                   }
                 </div>
