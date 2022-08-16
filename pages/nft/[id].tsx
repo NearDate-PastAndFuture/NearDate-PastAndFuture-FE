@@ -111,7 +111,19 @@ const NFTItem: NextPage = () => {
         })
 
         if (rent_message_list != null) {
-          setListRent(rent_message_list.rented_slots);
+          let rented = rent_message_list.rented_slots;
+          let slot = await Promise.all(
+            rented.map(ele =>
+              fetch(ele.rent_message)
+                .then((e) => e.json())
+                .then(e => {
+                  return {
+                    ...ele,
+                    message: e?.rent_message,
+                    message_created_date: e?.message_created_date,
+                  }
+                })));
+          setListRent(slot);
         }
       })
     };
@@ -327,7 +339,7 @@ const NFTItem: NextPage = () => {
               "token_id": id?.toString(),
               "message": ipfs_link_uploaded,
               "start_at": Date.now(),
-              "expire_at": 1 * 1000 * 24 * 60 * 60
+              "expire_at": Date.now() + 24 * 60 * 60 * 1000,
             }, 30000000000000, utils.format.parseNearAmount(resutl2.value.toString()));
 
           }, "NearDate is proccessing")
@@ -368,9 +380,9 @@ const NFTItem: NextPage = () => {
       <div className='container py-12 px-5 mx-auto'>
         <div className='grid grid-cols-3 gap-4'>
           <div className='col-span-1 flex flex-col justify-start items-center w-full'>
-            <div className="container relative block group h-96">
+            <div className="container relative block group max-h-full">
               <span className="absolute inset-0" />
-              <div className="relative flex items-end h-full transition-transform transform bg-white group-hover:-translate-x-2 group-hover:-translate-y-2">
+              <div className="relative flex items-end h-full transition-transform duration-500 transform bg-white group-hover:-translate-x-2 group-hover:-translate-y-2">
                 <div className="px-8 pb-8 transition-opacity group-hover:opacity-0 group-hover:absolute w-full h-full">
                   <div className="block relative rounded overflow-hidden w-full aspect-square lg:p-5">
                     {
@@ -397,10 +409,10 @@ const NFTItem: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className='mt-5 flex flex-col justify-start'>
+            <div className='mt-5 flex flex-col justify-start mx-auto container'>
               {
                 listSlotRent.map((e, i) => {
-                  return (<p key={e.starts_at} className='mt-1 font-semibold'>{e.rent_message}</p>);
+                  return (<p key={e.starts_at} className='mt-1 font-semibold border border-blue-400 px-2 rounded-sm'>{e.message}</p>);
                 })
               }
             </div>
