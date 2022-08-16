@@ -37,6 +37,9 @@ const NFTItem: NextPage = () => {
 
   const [listSlotRent, setListRent] = useState<Array<NFTSlotModel>>([]);
 
+  const [owner_id, setOwnerID] = useState<string>("");
+
+
   useEffect(() => {
     async function getData() {
       if (!account) return;
@@ -48,6 +51,8 @@ const NFTItem: NextPage = () => {
         });
 
         console.log("nft: ", data);
+
+        setOwnerID(data.owner_id);
 
         if (data?.approved_account_ids[contractMarketplace.contractId] > -1) {
           setIsSale(true);
@@ -76,19 +81,19 @@ const NFTItem: NextPage = () => {
           });
           setListBid(getListBid);
 
-          let bid_slot_list_resp : Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_by_token_id({
+          let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_by_token_id({
             "token_id": id?.toString()
           });
 
-          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid)=> 
+          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
             fetch(bid.message_url)
-            .then( e => e.json())
-            .then( ele => {
-              return {
-                ...bid,
-                ...ele,
-              }
-            })
+              .then(e => e.json())
+              .then(ele => {
+                return {
+                  ...bid,
+                  ...ele,
+                }
+              })
           ))
           setListBidSlot(bid_slot_list);
 
@@ -104,22 +109,22 @@ const NFTItem: NextPage = () => {
             setAnotherOffer(anotherOfferResp[0]);
           }
 
-          let bid_slot_list_resp : Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
+          let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
             "token_id": id?.toString(),
             "account_id": account.accountId,
           })
 
-          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid)=> 
+          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
             fetch(bid.message_url)
-            .then( e => e.json())
-            .then( ele => {
-              return {
-                ...bid,
-                ...ele,
-              }
-            })
+              .then(e => e.json())
+              .then(ele => {
+                return {
+                  ...bid,
+                  ...ele,
+                }
+              })
           ))
-  
+
           setListBidSlot(bid_slot_list);
 
         }
@@ -277,7 +282,7 @@ const NFTItem: NextPage = () => {
 
   async function onOfferAnotherSaleClick() {
     Swal.fire({
-      title: 'Your offer',
+      title: 'Your offer price',
       input: 'number',
       inputAttributes: {
         autocapitalize: 'off',
@@ -320,7 +325,7 @@ const NFTItem: NextPage = () => {
   async function onRentSlotClick() {
     let messageSlot = "";
     Swal.fire({
-      title: 'Your offer',
+      title: 'Your offer ',
       input: 'textarea',
       text: "Message",
       inputAttributes: {
@@ -439,16 +444,19 @@ const NFTItem: NextPage = () => {
             <div className='mt-5 flex flex-col justify-start mx-auto container'>
               {
                 listSlotRent.map((e, i) => {
-                  return (<p key={e.starts_at} className='mt-1 font-semibold border border-blue-400 px-2 rounded-sm'>{e.message}</p>);
+                  return (<p key={e.starts_at} className='mt-1 font-semibold border border-blue-400 px-2 rounded-sm'>{e.renting_account_id}:{e.message}</p>);
                 })
               }
+
             </div>
+
           </div>
           <div className='col-span-2'>
             <div className='flex flex-col justify-center items-start'>
 
               <div className='flex flex-row justify-center items-center mb-5'>
                 <span className=' font-semibold text-2xl'>{message?.message}</span>
+
                 {
                   isOwner && <button className='ml-2' onClick={onEditMessageClick}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -457,6 +465,7 @@ const NFTItem: NextPage = () => {
                   </button>
                 }
               </div>
+              <span >Owner : {owner_id}</span><br></br>
               {
                 isSale && <div className='flex flex-row justify-center items-center mb-5'>
                   <span className=' font-semibold text-xl'>Sale price: {priceSale} NEAR</span>
@@ -480,7 +489,7 @@ const NFTItem: NextPage = () => {
                     <button className='bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
                       onClick={onOfferSaleClick}
                     >
-                      Offer
+                      Buy
                     </button>
                   )
                 }
@@ -502,7 +511,7 @@ const NFTItem: NextPage = () => {
                     <button className='bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-md'
                       onClick={onOfferAnotherSaleClick}
                     >
-                      Make another offer
+                      Make Offer
                     </button>
                   )
                 }
@@ -520,10 +529,10 @@ const NFTItem: NextPage = () => {
                   {
                     !isDepositYet && (
                       <>
-                        <span>You must deposit before do sale</span>
+                        <span>You must approve before do sale</span>
                         <button className=' bg-yellow-400 ml-2 px-3 py-1 mb-5 rounded-md'
                           onClick={onDepositClick}
-                        >Deposit</button>
+                        >Approve</button>
                       </>
                     )
                   }
@@ -539,7 +548,7 @@ const NFTItem: NextPage = () => {
                   <button className='mt-2 bg-blue-500 px-5 py-2 rounded-md'
                     onClick={onPutSaleClick}
                   >
-                    Put it Marketplace
+                    Sell on Marketplace
                   </button>
                   <label className="mt-12 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="transfer">
                     <span className="text-xs font-medium text-gray-500">
@@ -561,7 +570,7 @@ const NFTItem: NextPage = () => {
             {
               isOwner && <>
                 <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
-                  Bid NFT
+                  Buy Offer
                 </h2>
                 <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
                   <table className="min-w-full text-sm divide-y divide-gray-200">
@@ -598,7 +607,7 @@ const NFTItem: NextPage = () => {
               </>
             }
             <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
-              {!isOwner && "Your "} Rent Slot
+              {!isOwner && "My  "} Rent Slot Bid
             </h2>
             <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
               <table className="min-w-full text-sm divide-y divide-gray-200">

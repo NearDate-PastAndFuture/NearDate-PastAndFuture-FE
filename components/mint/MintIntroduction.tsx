@@ -29,7 +29,7 @@ export default function MintIntroduction() {
                                 </div>
                                 <div className="flex-grow pl-4">
                                     <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">SELECT</h2>
-                                    <p className="leading-relaxed">VHS cornhole pop-up, try-hard 8-bit iceland helvetica. Kinfolk bespoke try-hard cliche palo santo offal.</p>
+                                    <p className="leading-relaxed">Select the DATE you want to mint. We have every date from 5/6/1933 - when <a href="https://www.history.com/this-day-in-history/fdr-takes-united-states-off-gold-standard">Franklin D. Roosevelt takes United States off gold standard</a>, to 1/1/2140 - when the last bitcoin will be minted (estimate)</p>
                                 </div>
                             </div>
                             <div className="flex relative pb-12">
@@ -44,7 +44,7 @@ export default function MintIntroduction() {
                                 </div>
                                 <div className="flex-grow pl-4">
                                     <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">MESSAGE</h2>
-                                    <p className="leading-relaxed">VHS cornhole pop-up, try-hard 8-bit iceland helvetica. Kinfolk bespoke try-hard cliche palo santo offal.</p>
+                                    <p className="leading-relaxed">Type a message, this message will be sticked to your NFT and can be editted later. You can send the message to future date or just write down your memory on this date. </p>
                                 </div>
                             </div>
                             <div className="flex relative">
@@ -56,13 +56,13 @@ export default function MintIntroduction() {
                                 </div>
                                 <div className="flex-grow pl-4">
                                     <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">PAYMENT</h2>
-                                    <p className="leading-relaxed">Pitchfork ugh tattooed scenester echo park gastropub whatever cold-pressed retro.</p>
+                                    <p className="leading-relaxed">The first 5,452 NFTs will be minted FREE. After that you have to pay 1 Near for mintting new NFT</p>
                                 </div>
                             </div>
                         </div>
                         <div className="lg:w-3/5 md:w-1/2 rounded-lg md:mt-0 mt-12 block overflow-hidden h-full">
                             <a className="block relative rounded overflow-hidden h-full cursor-pointer">
-                                <Image className="object-cover object-center block w-full" src="https://dummyimage.com/1200x500" alt="step" layout="fill" />
+                                <Image className="object-cover object-center block w-full" src="/logo.png" alt="step" width="1200" height="500" layout="intrinsic" />
                             </a>
                         </div>
                     </div>

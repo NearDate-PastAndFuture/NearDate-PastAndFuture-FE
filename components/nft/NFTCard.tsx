@@ -67,14 +67,15 @@ export default function NFTCard({ nft, size }: NFTCardProps) {
                     }
                 </a>
             </Link>
-            <h4 className={`border-2 border-blue-400 font-semibold mt-2 px-2 mb-5
+            <h4 className={`border-1 font-semibold mt-2 px-2 mb-5
             ${size == CardSize.Large ? "text-2xl" : "text-md"}`}>
                 {message?.message}
             </h4>
+            <p>==========</p>
             {
                 listRent.map((e, i) => {
                     return (
-                        <span key={e.message} className={`border border-blue-300 font-medium px-2 mt-1
+                        <span key={e.message} className={`border font-medium px-2 mt-1
                         ${size == CardSize.Large ? "text-md" : "text-sm"}`}>
                             {e.message}
                         </span>

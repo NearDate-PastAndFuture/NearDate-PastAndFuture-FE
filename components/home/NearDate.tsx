@@ -28,6 +28,7 @@ export default function NearDate() {
         const data: Array<NFTModel> = await contractNFT.nft_tokens_by_date({
           "date": `${format_number_2_digit(month)}${format_number_2_digit(day)}`
         });
+        console.log(data);
         setListNft(data);
         data.sort((a, b) => a.token_id > b.token_id ? 1 : -1);
         let index = data.findIndex(e => e.token_id == token_id_now || e.token_id > token_id_now);
@@ -109,11 +110,11 @@ export default function NearDate() {
               Mint Your Date
             </a>
           </Link>
-          <Link href={'/about'}>
+          {/* <Link href={'/about'}>
             <a className="block w-full px-12 py-3 text-sm font-medium text-red-600 rounded shadow sm:w-auto hover:text-red-700 active:text-red-500 focus:outline-none focus:ring">
               Learn More
             </a>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </section>

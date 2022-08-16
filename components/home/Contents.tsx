@@ -3,7 +3,7 @@ export default function Contents() {
         <section className="text-gray-600 body-font">
             <div className="container px-5 py-24 mx-auto">
                 <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Chúng tôi có gì</h1>
+                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">What can you do with NearDate NFT</h1>
                     {/* <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify, subway tile poke farm-to-table.</p> */}
                 </div>
                 <div className="flex flex-wrap -m-4">
@@ -14,8 +14,8 @@ export default function Contents() {
                                     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                                 </svg>
                             </div>
-                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Sở hữu ngày tháng có ý nghĩa trong đời bạn</h2>
-                            <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
+                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Your meaningful date NFT </h2>
+                            <p className="leading-relaxed text-base">Send your message to the future date or just tell everyone your son birthday</p>
                         </div>
                     </div>
                     <div className="xl:w-1/3 md:w-1/2 p-4">
@@ -27,8 +27,8 @@ export default function Contents() {
                                     <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12" />
                                 </svg>
                             </div>
-                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Chia sẻ dự đoán về tương lại, gửi thông điệp về quá khứ</h2>
-                            <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
+                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">NFT message slot</h2>
+                            <p className="leading-relaxed text-base">Someone want can make a bid to rent your NFT message slot in specific time. </p>
                         </div>
                     </div>
                     <div className="xl:w-1/3 md:w-1/2 p-4">
@@ -39,8 +39,8 @@ export default function Contents() {
                                     <circle cx={12} cy={7} r={4} />
                                 </svg>
                             </div>
-                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Chia sẻ dự đoán về tương lại, gửi thông điệp về quá khứ</h2>
-                            <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
+                            <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Use your NFT to get more benefit</h2>
+                            <p className="leading-relaxed text-base">If you own an NFT with special day, you can get some discount coupon from our partner.</p>
                         </div>
                     </div>
                 </div>

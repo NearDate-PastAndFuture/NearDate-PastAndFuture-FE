@@ -46,7 +46,7 @@ const Mint: NextPage = () => {
       loading_screen(async () => {
         let neardate = `${year}${format_number_2_digit(month)}${format_number_2_digit(day)}`;
         // upload to ipfs
-        const json_data : IPFSMessage = {
+        const json_data: IPFSMessage = {
           "id": neardate,
           "message": message,
           "token_created_date": Date.now(),
@@ -112,9 +112,9 @@ const Mint: NextPage = () => {
         <div className='pt-24'>
           <div className="mb-12 px-4 py-3 text-white bg-yellow-500">
             <p className="text-sm font-medium text-center">
-              Mỗi địa chỉ chỉ mint một lần
+              You only have 1 free mint
               <Link href="/marketplace" passHref>
-                <a className="underline"> Chuyển đến Martketplace → </a>
+                <a className="underline"> Go to Martketplace → </a>
               </Link>
             </p>
           </div>
