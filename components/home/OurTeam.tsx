@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function OurTeam() {
     return (
         <section className="text-gray-600 body-font">
@@ -9,7 +11,9 @@ export default function OurTeam() {
                 <div className="flex flex-wrap -m-4">
                     <div className="p-4 lg:w-1/4 md:w-1/2">
                         <div className="h-full flex flex-col items-center text-center">
-                            <img alt="team" className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4" src="https://dummyimage.com/200x200" />
+                            <a className="block relative rounded overflow-hidden w-full h-full cursor-pointer aspect-video">
+                                <Image alt="avatar" className="object-contain object-center w-full block" src="https://dummyimage.com/300x200" layout='fill' />
+                            </a>
                             <div className="w-full">
                                 <h2 className="title-font font-medium text-lg text-gray-900">Phạm Văn Minh Nhựt</h2>
                                 <h3 className="text-gray-500 mb-3">UI Developer</h3>
@@ -36,7 +40,9 @@ export default function OurTeam() {
                     </div>
                     <div className="p-4 lg:w-1/4 md:w-1/2">
                         <div className="h-full flex flex-col items-center text-center">
-                            <img alt="team" className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4" src="https://dummyimage.com/201x201" />
+                            <a className="block relative rounded overflow-hidden w-full h-full cursor-pointer aspect-video">
+                                <Image alt="avatar" className="object-contain object-center w-full block" src="https://dummyimage.com/300x200" layout='fill' />
+                            </a>
                             <div className="w-full">
                                 <h2 className="title-font font-medium text-lg text-gray-900">Holden Caulfield</h2>
                                 <h3 className="text-gray-500 mb-3">UI Developer</h3>
@@ -63,7 +69,9 @@ export default function OurTeam() {
                     </div>
                     <div className="p-4 lg:w-1/4 md:w-1/2">
                         <div className="h-full flex flex-col items-center text-center">
-                            <img alt="team" className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4" src="https://dummyimage.com/202x202" />
+                            <a className="block relative rounded overflow-hidden w-full h-full cursor-pointer aspect-video">
+                                <Image alt="avatar" className="object-contain object-center w-full block" src="https://dummyimage.com/300x200" layout='fill' />
+                            </a>
                             <div className="w-full">
                                 <h2 className="title-font font-medium text-lg text-gray-900">Atticus Finch</h2>
                                 <h3 className="text-gray-500 mb-3">UI Developer</h3>
@@ -90,7 +98,9 @@ export default function OurTeam() {
                     </div>
                     <div className="p-4 lg:w-1/4 md:w-1/2">
                         <div className="h-full flex flex-col items-center text-center">
-                            <img alt="team" className="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4" src="https://dummyimage.com/203x203" />
+                            <a className="block relative rounded overflow-hidden w-full h-full cursor-pointer aspect-video">
+                                <Image alt="avatar" className="object-contain object-center w-full block" src="https://dummyimage.com/300x200" layout='fill' />
+                            </a>
                             <div className="w-full">
                                 <h2 className="title-font font-medium text-lg text-gray-900">Henry Letham</h2>
                                 <h3 className="text-gray-500 mb-3">UI Developer</h3>

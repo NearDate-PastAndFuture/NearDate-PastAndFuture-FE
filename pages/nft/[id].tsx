@@ -372,9 +372,18 @@ const NFTItem: NextPage = () => {
               <span className="absolute inset-0" />
               <div className="relative flex items-end h-full transition-transform transform bg-white group-hover:-translate-x-2 group-hover:-translate-y-2">
                 <div className="px-8 pb-8 transition-opacity group-hover:opacity-0 group-hover:absolute w-full h-full">
-                  <div className="block relative rounded overflow-hidden h-full">
+                  <div className="block relative rounded overflow-hidden w-full aspect-square lg:p-5">
                     {
-                      id && <Image alt="neardate" className="h-full object-cover object-center w-full" src={get_ipfs_link_image(id.toString())} layout='fill' />
+                      id && <Image alt="neardate" className="h-full object-contain object-center w-full" src={get_ipfs_link_image(id.toString())} layout='fill' />
+                    }
+                    {
+                      isSale && (
+                        <div className="absolute left-1 bottom-2 border-green-900/10 bg-green-50 rounded-sm px-2 py-1 font-semibold text-green-700">
+                          {priceSale} NEAR
+                          <span className="animate-ping w-2.5 h-2.5 bg-green-600/75 rounded-full absolute -top-1 -left-1"></span>
+                          <span className="w-2.5 h-2.5 bg-green-600 rounded-full absolute -top-1 -left-1"></span>
+                        </div>
+                      )
                     }
                   </div>
                   <h2 className="mt-4 text-2xl font-medium text-center truncate text-ellipsis">{message?.message}</h2>

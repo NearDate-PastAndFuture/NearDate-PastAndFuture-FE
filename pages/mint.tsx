@@ -20,11 +20,16 @@ const Mint: NextPage = () => {
   const router = useRouter();
 
   const [step, setStep] = useState<number>(1);
-  const [nearDateTitle, setNearDateTitle] = useState<string>("");
+  const [isMintd, setIsMinted] = useState<boolean>(false);
 
-  const [day, setDay] = useState<number>(1);
-  const [mounth, setMounth] = useState<number>(1);
-  const [year, setYear] = useState<number>(2022);
+  let dateObj = new Date();
+  let monthNow = dateObj.getUTCMonth() + 1; //months from 1-12
+  let dayNow = dateObj.getUTCDate();
+  let yearNow = dateObj.getUTCFullYear();
+
+  const [day, setDay] = useState<number>(dayNow);
+  const [month, setMonth] = useState<number>(monthNow);
+  const [year, setYear] = useState<number>(yearNow);
 
   const [message, setMessage] = useState<string>("");
 
@@ -38,7 +43,7 @@ const Mint: NextPage = () => {
         return;
       }
       loading_screen(async () => {
-        let neardate = `${year}${format_number_2_digit(mounth)}${format_number_2_digit(day)}`;
+        let neardate = `${year}${format_number_2_digit(month)}${format_number_2_digit(day)}`;
         // upload to ipfs
         const json_data = {
           "id": neardate,
@@ -70,22 +75,21 @@ const Mint: NextPage = () => {
       if (!contractNFT) return;
       try {
         const data = await contractNFT.nft_token({
-          "token_id": `${year}${format_number_2_digit(mounth)}${format_number_2_digit(day)}`
+          "token_id": `${year}${format_number_2_digit(month)}${format_number_2_digit(day)}`
         });
         if (data === null) {
           setCanNextClick(true);
-          setNearDateTitle("");
+          setIsMinted(false);
         } else {
           setCanNextClick(false);
-          setNearDateTitle(data?.metadata?.title);
+          setIsMinted(true);
         }
       } catch (err) {
         console.log(err);
       }
     }
-
     checkoutNFTExsit();
-  }, [day, mounth, year]);
+  }, [day, month, year, contractNFT]);
 
   useEffect(() => {
     if (message.length != 0) {
@@ -156,8 +160,8 @@ const Mint: NextPage = () => {
                     Tháng
                   </span>
                   <input className="w-full p-0 text-sm border-none focus:ring-0" id="mounth" type="number" placeholder="01"
-                    value={mounth}
-                    onChange={(e) => setMounth(parseInt(e.target.value))} />
+                    value={month}
+                    onChange={(e) => setMonth(parseInt(e.target.value))} />
                 </label>
                 <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="year">
                   <span className="text-xs font-medium text-gray-500">
@@ -199,16 +203,24 @@ const Mint: NextPage = () => {
 
           <div className='px-24 flex flex-col items-center'>
             <div className='h-64 w-64 bg-gray-400 rounded-md'>
-              {/* <Image alt="neardate"
-                className="object-center" layout='fill'
-                src={get_ipfs_link_image(`${year}${format_number_2_digit(mounth)}${format_number_2_digit(day)}`)}
-              /> */}
+              <a className="block relative rounded overflow-hidden h-full cursor-pointer">
+                <Image alt="neardate"
+                  className="object-center" layout='fill'
+                  src={get_ipfs_link_image(`${year}${format_number_2_digit(month)}${format_number_2_digit(day)}`)}
+                />
+                {
+                  isMintd && (
+                    <div className="absolute right-1 bottom-2 border-amber-900/10 bg-amber-50 rounded-sm px-2 py-1 font-semibold text-amber-700">
+                      Minted
+                      <span className="animate-ping w-2.5 h-2.5 bg-amber-600/75 rounded-full absolute -top-1 -left-1"></span>
+                      <span className="w-2.5 h-2.5 bg-amber-600 rounded-full absolute -top-1 -left-1"></span>
+                    </div>
+                  )
+                }
+              </a>
             </div>
             <span>
-              {year}-{format_number_2_digit(mounth)}-{format_number_2_digit(day)}
-            </span>
-            <span>
-              {nearDateTitle}
+              {year}-{format_number_2_digit(month)}-{format_number_2_digit(day)}
             </span>
             <button className={
               `mt-6 inline-flex items-center px-8 py-3 text-white border  rounded hover:bg-transparent  focus:outline-none focus:ring

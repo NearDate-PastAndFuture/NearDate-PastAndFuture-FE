@@ -24,21 +24,17 @@ export default function NFTItemCard({ nft }: NFTItemCardProps) {
     // }, [nft]);
 
     return (
-        <Link href={`/nft/${nft?.token_id}`} passHref>
-            <div className="lg:w-1/4 md:w-1/2 p-4 w-full cursor-pointer">
-                <a className="block relative rounded overflow-hidden h-64">
+        <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
+            <Link href={`/nft/${nft.token_id}`} passHref>
+                <a className="block relative rounded overflow-hidden h-full cursor-pointer aspect-square">
                     {
-                        nft.token_id && <Image alt="ecommerce" className="object-cover object-center w-full h-full block" src={get_ipfs_link_image(nft.token_id)} layout='fill'/>
+                        nft.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src={get_ipfs_link_image(nft.token_id)} layout='fill' />
                     }
                     {
-                        !nft.token_id && <Image alt="ecommerce" className="object-cover object-center w-full h-full block" src="https://dummyimage.com/421x261" layout='fill'/>
+                        !nft.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src="https://dummyimage.com/421x261" layout='fill' />
                     }
                 </a>
-                <div className="mt-4">
-                    {/* <h2 className="text-gray-900 title-font text-lg font-medium text-center truncate">{message?.message || "NFT Unaivalbale now"}</h2> */}
-                    {/* <span>{utils.format.formatNearAmount(nft)} NEAR</span> */}
-                </div>
-            </div>
-        </Link>
+            </Link>
+        </div>
     );
 }
