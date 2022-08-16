@@ -13,6 +13,7 @@ import Image from "next/image";
 import { loading_screen } from "utils/loading";
 import { new_json_file } from "utils/file";
 import { useRouter } from 'next/router';
+import { IPFSMessage } from 'types';
 
 const Mint: NextPage = () => {
   const { account, contractNFT } = useAppContext();
@@ -45,7 +46,7 @@ const Mint: NextPage = () => {
       loading_screen(async () => {
         let neardate = `${year}${format_number_2_digit(month)}${format_number_2_digit(day)}`;
         // upload to ipfs
-        const json_data = {
+        const json_data : IPFSMessage = {
           "id": neardate,
           "message": message,
           "token_created_date": Date.now(),

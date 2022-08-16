@@ -24,6 +24,13 @@ export interface NFTMetadataModel {
   updated_at: Date;
 }
 
+export interface IPFSMessage {
+  id: string;
+  message: string;
+  token_created_date: number;
+  message_updated_date: number;
+}
+
 export interface NFTModel {
   approved_account_ids: any;
   message: string;
@@ -31,6 +38,7 @@ export interface NFTModel {
   owner_id: string;
   royalty: any
   token_id: string;
+  ipfs_message: IPFSMessage | null;
 }
 
 export interface NFTMessageModel {
