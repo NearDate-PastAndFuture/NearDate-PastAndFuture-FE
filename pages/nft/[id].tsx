@@ -49,7 +49,7 @@ const NFTItem: NextPage = () => {
 
         console.log("nft: ", data);
 
-        if (data?.approved_account_ids[contractMarketplace.contractId] > 0) {
+        if (data?.approved_account_ids[contractMarketplace.contractId] > -1) {
           setIsSale(true);
           let price: NFTSaleModel = await contractMarketplace.get_sale({
             "nft_contract_token": contractNFT.contractId + "." + id?.toString(),
@@ -76,9 +76,20 @@ const NFTItem: NextPage = () => {
           });
           setListBid(getListBid);
 
-          let bid_slot_list = await contractMarketplace.get_bid_rent_by_token_id({
+          let bid_slot_list_resp : Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_by_token_id({
             "token_id": id?.toString()
-          })
+          });
+
+          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid)=> 
+            fetch(bid.message_url)
+            .then( e => e.json())
+            .then( ele => {
+              return {
+                ...bid,
+                ...ele,
+              }
+            })
+          ))
           setListBidSlot(bid_slot_list);
 
         } else {
@@ -93,10 +104,22 @@ const NFTItem: NextPage = () => {
             setAnotherOffer(anotherOfferResp[0]);
           }
 
-          let bid_slot_list = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
+          let bid_slot_list_resp : Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
             "token_id": id?.toString(),
             "account_id": account.accountId,
           })
+
+          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid)=> 
+            fetch(bid.message_url)
+            .then( e => e.json())
+            .then( ele => {
+              return {
+                ...bid,
+                ...ele,
+              }
+            })
+          ))
+  
           setListBidSlot(bid_slot_list);
 
         }
@@ -257,7 +280,8 @@ const NFTItem: NextPage = () => {
       title: 'Your offer',
       input: 'number',
       inputAttributes: {
-        autocapitalize: 'off'
+        autocapitalize: 'off',
+        step: "0.01",
       },
       showCancelButton: true,
       confirmButtonText: 'Offer',
@@ -284,6 +308,8 @@ const NFTItem: NextPage = () => {
         loading_screen(async () => {
           let data = await contractMarketplace.accept_bid_token({
             "bid_id": bid_id,
+            "token_id": id?.toString(),
+            "nft_contract_id": contractNFT.contractId,
           }, 30000000000000, "1");
 
         }, "NearDate is proccessing")
@@ -315,7 +341,8 @@ const NFTItem: NextPage = () => {
           input: 'number',
           text: "Price",
           inputAttributes: {
-            autocapitalize: 'off'
+            autocapitalize: 'off',
+            step: "0.01",
           },
           showCancelButton: true,
           confirmButtonText: 'Offer',
@@ -494,7 +521,7 @@ const NFTItem: NextPage = () => {
                     !isDepositYet && (
                       <>
                         <span>You must deposit before do sale</span>
-                        <button className=' bg-yellow-400 px-3 py-2 mb-5 round-md'
+                        <button className=' bg-yellow-400 ml-2 px-3 py-1 mb-5 rounded-md'
                           onClick={onDepositClick}
                         >Deposit</button>
                       </>
@@ -579,6 +606,7 @@ const NFTItem: NextPage = () => {
                   <tr className="bg-gray-50">
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Message</th>
+                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Start At</th>
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
                     <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
@@ -592,8 +620,13 @@ const NFTItem: NextPage = () => {
                       return (
                         <tr key={i}>
                           <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.message_url}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.starts_at} - {e.expires_at}</td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                            {`${new Date(e.starts_at || Date.now()).toLocaleString("en-US")}`}
+                          </td>
+                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                            {`${new Date(e.expires_at || Date.now()).toLocaleString("en-US")}`}
+                          </td>
                           <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
                           <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
                             onClick={() => onBidSlotClick(e.bid_id)}

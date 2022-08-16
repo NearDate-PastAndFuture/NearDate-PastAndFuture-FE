@@ -79,6 +79,7 @@ export interface NFTBidSlotModel {
   price: string;
   starts_at: number;
   token_id: string;
+  rent_message: string;
 }
 
 export interface NFTRentSlotModel {

@@ -46,16 +46,20 @@ const MyNearDate: NextPage = () => {
           setListNFT(list_token);
         }
         if (tabSelected == TabSelect.YourSlot) {
-          // let data : Array<NFTSlotModel> = await contractMarketplace.get_rent_by_account_id({
-          //   "account_id": account.accountId
-          // })
-          // let token_id_list = data.map(e=>e);
-          // let list_token = await getAsyncToken(token_id_list);
-          setListNFT([]);
+          let data = await contractMarketplace.get_rent_by_account_id({
+            "account_id": account.accountId
+          })
+          let token_id_list = data.map((e: { token_id: string; }) => e?.token_id);
+          let list_token = await getAsyncToken(token_id_list);
+          setListNFT(list_token);
         }
         if (tabSelected == TabSelect.YourSlotBid) {
-          //
-          setListNFT([]);
+          let data = await contractMarketplace.get_bid_rent_by_account_id({
+            "account_id": account.accountId
+          })
+          let token_id_list = data.map((e: { token_id: string; }) => e?.token_id);
+          let list_token = await getAsyncToken(token_id_list);
+          setListNFT(list_token);
         }
       })
     };
