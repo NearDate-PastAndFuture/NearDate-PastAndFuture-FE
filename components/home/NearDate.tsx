@@ -28,7 +28,9 @@ export default function NearDate() {
         const data: Array<NFTModel> = await contractNFT.nft_tokens_by_date({
           "date": `${format_number_2_digit(month)}${format_number_2_digit(day)}`
         });
+        
         data.sort((a, b) => a.token_id > b.token_id ? 1 : -1);
+        setListNft(data)
         let index = data.findIndex(e => e.token_id == token_id_now || e.token_id > token_id_now);
         if (index == -1 && data.length > 0) {
           index = data.length - 1;

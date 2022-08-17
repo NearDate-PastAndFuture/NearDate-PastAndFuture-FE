@@ -25,7 +25,7 @@ export default function NFTCard({ nft, size }: NFTCardProps) {
     useEffect(() => {
 
         async function getData() {
-            if (!nft.message) return;
+            if (!nft?.message) return;
 
             let message_resp = await fetch(nft.message)
             let message_json: NFTMessageModel = await message_resp.json();
@@ -56,14 +56,14 @@ export default function NFTCard({ nft, size }: NFTCardProps) {
 
     return (
         <div className="w-full p-4 flex flex-col items-center">
-            <Link href={`/nft/${nft.token_id}`} passHref>
+            <Link href={`/nft/${nft?.token_id}`} passHref>
                 <a className={`block relative rounded overflow-hidden h-full cursor-pointer aspect-square 
                     ${size == CardSize.Large ? "w-1/2" : "w-3/4"}`}>
                     {
-                        nft.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src={get_ipfs_link_image(nft.token_id)} layout='fill' />
+                        nft?.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src={get_ipfs_link_image(nft?.token_id)} layout='fill' />
                     }
                     {
-                        !nft.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src="https://dummyimage.com/421x261" layout='fill' />
+                        !nft?.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src="https://dummyimage.com/421x261" layout='fill' />
                     }
                 </a>
             </Link>
@@ -71,13 +71,19 @@ export default function NFTCard({ nft, size }: NFTCardProps) {
             ${size == CardSize.Large ? "text-2xl" : "text-md"}`}>
                 {message?.message}
             </h4>
-            <p>==========</p>
+            {
+                listRent.length != 0 && (
+                    <div className={`border-t-2 border-blue-400 mb-2
+                ${size == CardSize.Large ? "w-1/3" : "w-1/2"}`}>
+                    </div>
+                )
+            }
             {
                 listRent.map((e, i) => {
                     return (
-                        <span key={e.message} className={`border font-medium px-2 mt-1
+                        <span key={e?.message} className={`border font-medium px-2 mt-1
                         ${size == CardSize.Large ? "text-md" : "text-sm"}`}>
-                            {e.message}
+                            {e?.message}
                         </span>
                     );
                 })
