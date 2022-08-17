@@ -42,7 +42,6 @@ const NFTItem: NextPage = () => {
 
   useEffect(() => {
     async function getData() {
-      if (!account) return;
       if (!id) return;
 
       loading_screen(async () => {
@@ -66,67 +65,69 @@ const NFTItem: NextPage = () => {
           }
         }
 
-        if (data.owner_id == account.accountId) {
-          setIsOwner(true)
+        if (account?.accountId) {
+          if (data.owner_id == account.accountId) {
+            setIsOwner(true)
 
-          let checkDeposit = await contractMarketplace.storage_balance_of({
-            "account_id": account.accountId
-          })
-          if (checkDeposit >= 0.1) {
-            setIsDepositYet(true);
-          }
+            let checkDeposit = await contractMarketplace.storage_balance_of({
+              "account_id": account.accountId
+            })
+            if (checkDeposit >= 0.1) {
+              setIsDepositYet(true);
+            }
 
-          let getListBid: Array<NFTBidModel> = await contractMarketplace.get_bid_token_by_token_id({
-            "token_id": id?.toString(),
-          });
-          setListBid(getListBid);
+            let getListBid: Array<NFTBidModel> = await contractMarketplace.get_bid_token_by_token_id({
+              "token_id": id?.toString(),
+            });
+            setListBid(getListBid);
 
-          let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_by_token_id({
-            "token_id": id?.toString()
-          });
+            let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_by_token_id({
+              "token_id": id?.toString()
+            });
 
-          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
-            fetch(bid.message_url)
-              .then(e => e.json())
-              .then(ele => {
-                return {
-                  ...bid,
-                  ...ele,
-                }
-              })
-          ))
-          setListBidSlot(bid_slot_list);
+            let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
+              fetch(bid.message_url)
+                .then(e => e.json())
+                .then(ele => {
+                  return {
+                    ...bid,
+                    ...ele,
+                  }
+                })
+            ))
+            setListBidSlot(bid_slot_list);
 
-        } else {
-          let anotherOfferResp = await contractMarketplace.get_bid_token_on_nft_by_account_id({
-            "account_id": account.accountId,
-            "token_id": id?.toString(),
-          });
-
-          if (anotherOfferResp.length == 0) {
-            anotherOfferResp = null
           } else {
-            setAnotherOffer(anotherOfferResp[0]);
+            let anotherOfferResp = await contractMarketplace.get_bid_token_on_nft_by_account_id({
+              "account_id": account.accountId,
+              "token_id": id?.toString(),
+            });
+
+            if (anotherOfferResp.length == 0) {
+              anotherOfferResp = null
+            } else {
+              setAnotherOffer(anotherOfferResp[0]);
+            }
+
+            let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
+              "token_id": id?.toString(),
+              "account_id": account.accountId,
+            })
+
+            let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
+              fetch(bid.message_url)
+                .then(e => e.json())
+                .then(ele => {
+                  return {
+                    ...bid,
+                    ...ele,
+                  }
+                })
+            ))
+
+            setListBidSlot(bid_slot_list);
+
           }
-
-          let bid_slot_list_resp: Array<NFTBidSlotModel> = await contractMarketplace.get_bid_rent_on_nft_by_account_id({
-            "token_id": id?.toString(),
-            "account_id": account.accountId,
-          })
-
-          let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
-            fetch(bid.message_url)
-              .then(e => e.json())
-              .then(ele => {
-                return {
-                  ...bid,
-                  ...ele,
-                }
-              })
-          ))
-
-          setListBidSlot(bid_slot_list);
-
         }
 
         let message_data_resp = await fetch(data.message);
@@ -465,7 +466,7 @@ const NFTItem: NextPage = () => {
                   </button>
                 }
               </div>
-              <span >Owner : {owner_id}</span><br></br>
+              <p className='text-xl mb-2'>Owner : <span className=' font-semibold'>{owner_id}</span></p>
               {
                 isSale && <div className='flex flex-row justify-center items-center mb-5'>
                   <span className=' font-semibold text-xl'>Sale price: {priceSale} NEAR</span>
@@ -482,7 +483,7 @@ const NFTItem: NextPage = () => {
             </div>
 
             {
-              !isOwner &&
+              (account?.accountId && !isOwner) &&
               <div className='flex flex-row justify-start gap-4 items-center'>
                 {
                   isSale && (
@@ -516,11 +517,15 @@ const NFTItem: NextPage = () => {
                   )
                 }
 
-                <button className='ml-5 bg-yellow-500 px-5 py-2 font-semibold hover:bg-yellow-600 rounded-md'
-                  onClick={onRentSlotClick}
-                >
-                  Rent Slot
-                </button>
+                {
+                  account?.accountId && (
+                    <button className='ml-5 bg-yellow-500 px-5 py-2 font-semibold hover:bg-yellow-600 rounded-md'
+                      onClick={onRentSlotClick}
+                    >
+                      Rent Slot
+                    </button>
+                  )
+                }
               </div>
             }
             {
@@ -606,51 +611,57 @@ const NFTItem: NextPage = () => {
                 </div>
               </>
             }
-            <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
-              {!isOwner && "My  "} Rent Slot Bid
-            </h2>
-            <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
-              <table className="min-w-full text-sm divide-y divide-gray-200">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Message</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Start At</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
-                    <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                      {isOwner ? "Accept" : "Cancel"}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {
-                    listBidSlot.map((e, i) => {
-                      return (
-                        <tr key={i}>
-                          <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
-                            {`${new Date(e.starts_at || Date.now()).toLocaleString("en-US")}`}
-                          </td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
-                            {`${new Date(e.expires_at || Date.now()).toLocaleString("en-US")}`}
-                          </td>
-                          <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
-                          <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
-                            onClick={() => onBidSlotClick(e.bid_id)}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
-                            </svg>
-                          </td>
+            {
+              account?.acountId && (
+                <>
+                  <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
+                    {!isOwner && "My  "} Rent Slot Bid
+                  </h2>
+                  <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
+                    <table className="min-w-full text-sm divide-y divide-gray-200">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Message</th>
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Start At</th>
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
+                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
+                            {isOwner ? "Accept" : "Cancel"}
+                          </th>
                         </tr>
-                      )
-                    })
-                  }
-                </tbody>
-              </table>
-            </div>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {
+                          listBidSlot.map((e, i) => {
+                            return (
+                              <tr key={i}>
+                                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
+                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
+                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                                  {`${new Date(e.starts_at || Date.now()).toLocaleString("en-US")}`}
+                                </td>
+                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                                  {`${new Date(e.expires_at || Date.now()).toLocaleString("en-US")}`}
+                                </td>
+                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
+                                <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
+                                  onClick={() => onBidSlotClick(e.bid_id)}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                                  </svg>
+                                </td>
+                              </tr>
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )
+            }
 
             {
               (isOwner && isSale) && <button className='mt-12 bg-yellow-500 px-5 py-2 rounded-md'
