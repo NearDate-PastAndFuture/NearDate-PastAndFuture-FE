@@ -85,17 +85,21 @@ const NFTItem: NextPage = () => {
               "token_id": id?.toString()
             });
 
-            let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
-              fetch(bid.message_url)
-                .then(e => e.json())
-                .then(ele => {
-                  return {
-                    ...bid,
-                    ...ele,
-                  }
-                })
-            ))
-            setListBidSlot(bid_slot_list);
+            try {
+              let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
+                fetch(bid.message_url)
+                  .then(e => e.json())
+                  .then(ele => {
+                    return {
+                      ...bid,
+                      ...ele,
+                    }
+                  })
+              ))
+              setListBidSlot(bid_slot_list);
+            } catch (err) {
+              console.log("get_bid_rent_by_token_id: ", err);
+            }
 
           } else {
             let anotherOfferResp = await contractMarketplace.get_bid_token_on_nft_by_account_id({
@@ -114,18 +118,22 @@ const NFTItem: NextPage = () => {
               "account_id": account.accountId,
             })
 
-            let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
-              fetch(bid.message_url)
-                .then(e => e.json())
-                .then(ele => {
-                  return {
-                    ...bid,
-                    ...ele,
-                  }
-                })
-            ))
+            try {
+              let bid_slot_list = await Promise.all(bid_slot_list_resp.map((bid) =>
+                fetch(bid.message_url)
+                  .then(e => e.json())
+                  .then(ele => {
+                    return {
+                      ...bid,
+                      ...ele,
+                    }
+                  })
+              ))
 
-            setListBidSlot(bid_slot_list);
+              setListBidSlot(bid_slot_list);
+            } catch (err) {
+              console.log("get_bid_rent_on_nft_by_account_id", err);
+            }
 
           }
         }
