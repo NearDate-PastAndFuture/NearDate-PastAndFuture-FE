@@ -368,7 +368,7 @@ const NFTItem: NextPage = () => {
             let domain = await ipfs.put([file]);
             let ipfs_link_uploaded = get_ipfs_link(domain, file_name);
 
-            let data = contractMarketplace.bid_rent({
+            let data = await contractMarketplace.bid_rent({
               "token_id": id?.toString(),
               "message": ipfs_link_uploaded,
               "start_at": Date.now(),
