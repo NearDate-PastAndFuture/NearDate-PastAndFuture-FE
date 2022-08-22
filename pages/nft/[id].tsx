@@ -612,7 +612,7 @@ const NFTItem: NextPage = () => {
               </>
             }
             {
-              account?.acountId && (
+              account?.accountId && (
                 <>
                   <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
                     {!isOwner && "My  "} Rent Slot Bid

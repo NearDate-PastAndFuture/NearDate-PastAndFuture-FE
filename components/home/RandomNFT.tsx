@@ -14,7 +14,7 @@ export default function RandomNFT() {
       if (!account) return;
       try {
         let data = await contractNFT.get_random_nfts({
-          "number": 4
+          "number": 8
         });
 
         setListNFT(data);
