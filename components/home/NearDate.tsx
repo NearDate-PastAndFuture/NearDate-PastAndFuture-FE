@@ -54,7 +54,7 @@ export default function NearDate() {
   return (
     <section className="bg-gray-50 py-24">
       <div className="grid grid-cols-4 gap-4 container w-full px-5 mx-auto">
-        <div className=" flex flex-row items-center">
+        <div className="flex flex-row items-center">
           {
             (indexNearDatePrevious != null && indexNearDatePrevious - 1 > -1) && <button onClick={() => setIndexNearDatePrevious(indexNearDatePrevious - 1)}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">

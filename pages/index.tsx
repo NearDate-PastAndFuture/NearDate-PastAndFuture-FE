@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
 import NearDate from "components/home/NearDate";
+import NearDateV2 from "components/home/NearDateV2";
 import RandomNFT from "components/home/RandomNFT";
 import Contents from "components/home/Contents";
 import OurTeam from "components/home/OurTeam";
@@ -17,7 +18,7 @@ const Home: NextPage = () => {
         <title>NearDate-PastAndFuture</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <NearDate />
+      <NearDateV2 />
       <RandomNFT />
       <Contents />
       {/* <OurTeam /> */}

@@ -23,7 +23,7 @@ export default function NFTItemCard({ nft }: NFTItemCardProps) {
     }, [nft]);
 
     return (
-        <div className="lg:w-1/4 md:w-1/2 p-4 w-full p-7">
+        <div className="lg:w-1/4 md:w-1/2 w-full p-7">
             <Link href={`/nft/${nft.token_id}`} passHref>
                 <a className="block relative rounded overflow-hidden h-full cursor-pointer aspect-square">
                     {
@@ -33,7 +33,6 @@ export default function NFTItemCard({ nft }: NFTItemCardProps) {
                         !nft.token_id && <Image alt="neardate" className="object-contain object-center w-full block" src="https://dummyimage.com/421x261" layout='fill' />
                     }
                 </a>
-
             </Link>
             <p className={`font-semibold text-md "}`}>
                 {message?.message}
