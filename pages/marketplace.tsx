@@ -36,6 +36,24 @@ const Marketplace: NextPage = () => {
       </Head>
       <div className="container px-4 py-12 mx-auto sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:items-start">
+        <div className="lg:col-span-3 px-2">
+            <div className='my-2'>
+              <span className=' font-bold'>Tổng số {listNFT.length}</span>
+            </div>
+
+            <section className="text-gray-600 body-font">
+              <div className="container mx-auto">
+                <div className="flex flex-wrap -m-4">
+                  {
+                    listNFT.map((e, i) => {
+                      return (<NFTSaleCard key={i} nft={e}/>);
+                    })
+                  }
+                </div>
+              </div>
+            </section>
+
+          </div>
           <div className="lg:sticky lg:top-4">
             <details open className="overflow-hidden border border-gray-200 rounded">
               <summary className="flex items-center justify-between px-5 py-3 bg-gray-100 lg:hidden">
@@ -48,7 +66,7 @@ const Marketplace: NextPage = () => {
               </summary>
               <form className="border-t border-gray-200 lg:border-t-0">
                 <fieldset>
-                  <legend className="block w-full px-5 py-3 text-xs font-medium bg-gray-50">
+                  <legend className="block w-full px-5 py-3 text-xs font-medium bg-backgroundLight">
                     Holidays of the year by
                   </legend>
                   <div className="px-5 py-6 space-y-2">
@@ -73,7 +91,7 @@ const Marketplace: NextPage = () => {
                 </fieldset>
                 <div>
                   <fieldset>
-                    <legend className="block w-full px-5 py-3 text-xs font-medium bg-gray-50">
+                    <legend className="block w-full px-5 py-3 text-xs font-medium bg-backgroundLight">
                       Price
                     </legend>
                     <div className="px-5 py-6 space-y-2">
@@ -113,30 +131,12 @@ const Marketplace: NextPage = () => {
                   <button name="reset" type="button" className="text-xs font-medium text-gray-600 underline rounded">
                     Reset All
                   </button>
-                  <button name="commit" type="button" className="px-5 py-3 text-xs font-medium text-white bg-green-600 rounded">
+                  <button name="commit" type="button" className="px-5 py-3 text-xs font-medium text-white bg-imageLight rounded">
                     Apply Filters
                   </button>
                 </div>
               </form>
             </details>
-          </div>
-          <div className="lg:col-span-3 px-2">
-            <div className='my-2'>
-              <span className=' font-bold'>Tổng số {listNFT.length}</span>
-            </div>
-
-            <section className="text-gray-600 body-font">
-              <div className="container mx-auto">
-                <div className="flex flex-wrap -m-4">
-                  {
-                    listNFT.map((e, i) => {
-                      return (<NFTSaleCard key={i} nft={e}/>);
-                    })
-                  }
-                </div>
-              </div>
-            </section>
-
           </div>
         </div>
       </div>

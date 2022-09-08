@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
-import NFTItemCard from "components/nft/NFTItemCard";
+import NFTItemCardV2 from "components/nft/NFTItemCardV2";
 import { NFTBidModel, NFTModel, NFTSlotModel } from "types";
 import { loading_screen } from 'utils/loading';
 
@@ -23,14 +23,14 @@ const MyNearDate: NextPage = () => {
 
   useEffect(() => {
     async function getAsyncToken(token_id_list: Array<String>) {
-      return Promise.all(token_id_list.map((e)=> contractNFT.nft_token({
+      return Promise.all(token_id_list.map((e) => contractNFT.nft_token({
         "token_id": e
       })))
     }
 
     async function getListNFT() {
       if (!account) return;
-      loading_screen(async ()=> {
+      loading_screen(async () => {
         if (tabSelected == TabSelect.YourNFT) {
           let data = await contractNFT.nft_tokens_for_owner({
             "account_id": account.accountId
@@ -38,10 +38,10 @@ const MyNearDate: NextPage = () => {
           setListNFT(data);
         }
         if (tabSelected == TabSelect.YourBid) {
-          let data : Array<NFTBidModel> = await contractMarketplace.get_bid_token_by_account_id({
+          let data: Array<NFTBidModel> = await contractMarketplace.get_bid_token_by_account_id({
             "account_id": account.accountId
           });
-          let token_id_list = data.map(e=>e.token_id);
+          let token_id_list = data.map(e => e.token_id);
           let list_token = await getAsyncToken(token_id_list);
           setListNFT(list_token);
         }
@@ -76,30 +76,30 @@ const MyNearDate: NextPage = () => {
         <div className="container px-5 py-24 mx-auto">
           <nav className="flex text-sm font-medium border-b border-gray-100">
             <button className={`cursor-pointer p-4 -mb-px border-b hover:text-cyan-500 ${tabSelected == TabSelect.YourNFT && "text-cyan-500 border-current"}`}
-            onClick={()=> setTabSelected(TabSelect.YourNFT)}
+              onClick={() => setTabSelected(TabSelect.YourNFT)}
             >
               Your NFT
             </button>
             <button className={`cursor-pointer p-4 -mb-px border-b hover:text-cyan-500 ${tabSelected == TabSelect.YourBid && "text-cyan-500 border-current"}`}
-            onClick={()=> setTabSelected(TabSelect.YourBid)}
+              onClick={() => setTabSelected(TabSelect.YourBid)}
             >
               Your NFT Bid
             </button>
             <button className={`cursor-pointer p-4 -mb-px border-b hover:text-cyan-500 ${tabSelected == TabSelect.YourSlot && "text-cyan-500 border-current"}`}
-            onClick={()=> setTabSelected(TabSelect.YourSlot)}
+              onClick={() => setTabSelected(TabSelect.YourSlot)}
             >
               Rent Slot
             </button>
             <button className={`cursor-pointer p-4 -mb-px border-b hover:text-cyan-500 ${tabSelected == TabSelect.YourSlotBid && "text-cyan-500 border-current"}`}
-            onClick={()=> setTabSelected(TabSelect.YourSlotBid)}
+              onClick={() => setTabSelected(TabSelect.YourSlotBid)}
             >
               Rent Slot Bid
             </button>
           </nav>
-          <div className="mt-12 flex flex-wrap -m-4">
+          <div className="pl-10 mt-12 flex flex-wrap -m-4 gap-10">
             {
               listNFT.map((e, i) => {
-                return (<NFTItemCard key={i} nft={e} />);
+                return (<NFTItemCardV2 key={i} nft={e} />);
               })
             }
           </div>
