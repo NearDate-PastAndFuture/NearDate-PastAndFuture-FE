@@ -121,23 +121,23 @@ const Mint: NextPage = () => {
           <h2 className="sr-only">Steps</h2>
           <div className="relative after:inset-x-0 after:h-0.5 after:absolute after:top-1/2 after:-translate-y-1/2 after:block after:rounded-lg after:bg-gray-100">
             <ol className="relative z-10 flex justify-between text-sm font-medium text-gray-500">
-              <li className="flex items-center p-2 bg-white">
-                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 1 ? "bg-blue-600" : "bg-gray-100"}`}>
+              <li className="flex items-center p-2 bg-backgroundLight rounded-sm">
+                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 1 ? "bg-blue-600" : "bg-background"}`}>
                   1
                 </span>
-                <span className="hidden sm:block sm:ml-2"> Select </span>
+                <span className="hidden sm:block sm:ml-2 text-primary"> Select </span>
               </li>
-              <li className="flex items-center p-2 bg-white">
-                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 2 ? "bg-blue-600" : "bg-gray-100"}`}>
+              <li className="flex items-center p-2 bg-backgroundLight rounded-sm">
+                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 2 ? "bg-blue-600" : " bg-background"}`}>
                   2
                 </span>
-                <span className="hidden sm:block sm:ml-2"> Message </span>
+                <span className="hidden sm:block sm:ml-2 text-primary"> Message </span>
               </li>
-              <li className="flex items-center p-2 bg-white">
-                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 3 ? "bg-blue-600" : "bg-gray-100"}`}>
+              <li className="flex items-center p-2 bg-backgroundLight rounded-sm">
+                <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 3 ? "bg-blue-600" : " bg-background"}`}>
                   3
                 </span>
-                <span className="hidden sm:block sm:ml-2"> Payment </span>
+                <span className="hidden sm:block sm:ml-2 text-primary"> Payment </span>
               </li>
             </ol>
           </div>
@@ -148,27 +148,27 @@ const Mint: NextPage = () => {
             step == 1 && (
               <div className='px-24 flex flex-col'>
                 <label className="relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="day">
-                  <span className="text-xs font-medium text-gray-500">
+                  <span className="text-xs font-medium text-primary">
                     Ngày
                   </span>
-                  <input className="w-full p-0 text-sm border-none focus:ring-0" id="day" type="number" placeholder="01"
+                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="day" type="number" placeholder="01"
                     value={day}
                     onChange={(e) => setDay(parseInt(e.target.value))}
                   />
                 </label>
                 <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="mounth">
-                  <span className="text-xs font-medium text-gray-500">
+                  <span className="text-xs font-medium text-primary">
                     Tháng
                   </span>
-                  <input className="w-full p-0 text-sm border-none focus:ring-0" id="mounth" type="number" placeholder="01"
+                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="mounth" type="number" placeholder="01"
                     value={month}
                     onChange={(e) => setMonth(parseInt(e.target.value))} />
                 </label>
                 <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="year">
-                  <span className="text-xs font-medium text-gray-500">
+                  <span className="text-xs font-medium text-primary">
                     Năm
                   </span>
-                  <input className="w-full p-0 text-sm border-none focus:ring-0" id="year" type="number" placeholder="2022"
+                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="year" type="number" placeholder="2022"
                     value={year}
                     onChange={(e) => setYear(parseInt(e.target.value))} />
                 </label>
@@ -179,10 +179,10 @@ const Mint: NextPage = () => {
             step == 2 && (
               <div className='px-24 flex flex-col'>
                 <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="message">
-                  <span className="text-xs font-medium text-gray-500">
+                  <span className="text-xs font-medium text-primary">
                     Message
                   </span>
-                  <textarea className="w-full p-0 text-sm border-none focus:ring-0" id="message" placeholder="Message"
+                  <textarea className="w-full bg-transparent text-secondary p-0 text-sm border-none focus:ring-0" id="message" placeholder="Message"
                     rows={5}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)} />
@@ -212,7 +212,7 @@ const Mint: NextPage = () => {
                 {
                   isMintd && (
                     <div className="absolute right-1 bottom-2 border-amber-900/10 bg-amber-50 rounded-sm px-2 py-1 font-semibold text-amber-700">
-                      Minted
+                      Mined
                       <span className="animate-ping w-2.5 h-2.5 bg-amber-600/75 rounded-full absolute -top-1 -left-1"></span>
                       <span className="w-2.5 h-2.5 bg-amber-600 rounded-full absolute -top-1 -left-1"></span>
                     </div>

@@ -10,9 +10,9 @@ export default function MintIntroduction() {
                 <div className="flex flex-row justify-start items-center">
                     <label className="relative inline-block h-8 w-16">
                         <input type="checkbox" className="peer sr-only" onChange={(e) => setIsShow(e.target.checked)} />
-                        <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-200 transition duration-200 before:absolute before:bottom-1 before:left-1 before:h-6 before:w-6 before:rounded-full before:bg-white before:transition before:duration-200 before:shadow-sm peer-checked:bg-green-500 peer-checked:before:translate-x-8 peer-focus:ring" />
+                        <span className="absolute inset-0 cursor-pointer rounded-full bg-backgroundLight transition duration-200 before:absolute before:bottom-1 before:left-1 before:h-6 before:w-6 before:rounded-full before:bg-white before:transition before:duration-200 before:shadow-sm peer-checked:bg-imageLight peer-checked:before:translate-x-8 peer-focus:ring" />
                     </label>
-                    <span className="ml-2">Close Introduction</span>
+                    <span className="ml-2 text-primary">Close Introduction</span>
                 </div>
 
                 <div className={`flex-wrap transition-all ease-in-out delay-150 duration-1000 ${isShow ? "hidden" : "flex"}`}>
@@ -28,8 +28,8 @@ export default function MintIntroduction() {
                                     </svg>
                                 </div>
                                 <div className="flex-grow pl-4">
-                                    <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">SELECT</h2>
-                                    <p className="leading-relaxed">Select the DATE you want to mint. We have every date from 5/6/1933 - when <a href="https://www.history.com/this-day-in-history/fdr-takes-united-states-off-gold-standard">Franklin D. Roosevelt takes United States off gold standard</a>, to 1/1/2140 - when the last bitcoin will be minted (estimate)</p>
+                                    <h2 className="font-medium title-font text-sm text-secondary mb-1 tracking-wider">SELECT</h2>
+                                    <p className="leading-relaxed text-primary">Select the DATE you want to mint. We have every date from 5/6/1933 - when <a href="https://www.history.com/this-day-in-history/fdr-takes-united-states-off-gold-standard">Franklin D. Roosevelt takes United States off gold standard</a>, to 1/1/2140 - when the last bitcoin will be minted (estimate)</p>
                                 </div>
                             </div>
                             <div className="flex relative pb-12">
@@ -43,8 +43,8 @@ export default function MintIntroduction() {
                                     </svg>
                                 </div>
                                 <div className="flex-grow pl-4">
-                                    <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">MESSAGE</h2>
-                                    <p className="leading-relaxed">Type a message, this message will be sticked to your NFT and can be editted later. You can send the message to future date or just write down your memory on this date. </p>
+                                    <h2 className="font-medium title-font text-sm text-secondary mb-1 tracking-wider">MESSAGE</h2>
+                                    <p className="leading-relaxed text-primary">Type a message, this message will be sticked to your NFT and can be editted later. You can send the message to future date or just write down your memory on this date. </p>
                                 </div>
                             </div>
                             <div className="flex relative">
@@ -55,8 +55,8 @@ export default function MintIntroduction() {
                                     </svg>
                                 </div>
                                 <div className="flex-grow pl-4">
-                                    <h2 className="font-medium title-font text-sm text-gray-900 mb-1 tracking-wider">PAYMENT</h2>
-                                    <p className="leading-relaxed">The first 5,452 NFTs will be minted FREE. After that you have to pay 1 Near for mintting new NFT</p>
+                                    <h2 className="font-medium title-font text-sm text-secondary mb-1 tracking-wider">PAYMENT</h2>
+                                    <p className="leading-relaxed text-primary">The first 5,452 NFTs will be minted FREE. After that you have to pay 1 Near for mintting new NFT</p>
                                 </div>
                             </div>
                         </div>
