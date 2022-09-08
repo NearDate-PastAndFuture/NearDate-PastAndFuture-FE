@@ -461,7 +461,7 @@ const NFTItem: NextPage = () => {
               {
                 listSlotRent.map(e => {
                   return (
-                    <div className="rounded-md bg-backgroundLight py-1 px-2">
+                    <div key={e.message} className="rounded-md bg-backgroundLight py-1 px-2">
                       <p className="text-primary">
                         {e.message}
                       </p>

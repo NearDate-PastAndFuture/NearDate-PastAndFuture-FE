@@ -87,7 +87,7 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
                     {
                         listRent.map(e => {
                             return (
-                                <div className="rounded-md bg-background px-2 py-1">
+                                <div key={e.message} className="rounded-md bg-background px-2 py-1">
                                     <p className="text-primary">
                                         {e.message}
                                     </p>
@@ -99,7 +99,7 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
                         })
                     }
                     {
-                        listRent.length == 0 && <span className="text-secondary">Don't have any rent</span>
+                        listRent.length == 0 && <span className="text-secondary">Don&apos;t have any rent</span>
                     }
                 </div>
             </div>
