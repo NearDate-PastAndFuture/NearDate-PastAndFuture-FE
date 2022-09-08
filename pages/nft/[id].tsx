@@ -12,6 +12,7 @@ import { utils } from "near-api-js";
 import { loading_screen } from "utils/loading";
 import { new_json_file } from 'utils/file';
 import Swal from 'sweetalert2';
+import { truncate } from 'utils/format';
 
 const NFTItem: NextPage = () => {
   const router = useRouter()
@@ -420,45 +421,58 @@ const NFTItem: NextPage = () => {
       </Head>
       <div className='container py-12 px-5 mx-auto'>
         <div className='grid grid-cols-3 gap-4'>
-          <div className='col-span-1 flex flex-col justify-start items-center w-full'>
-            <div className="container relative block group max-h-full">
-              <span className="absolute inset-0" />
-              <div className="relative flex items-end h-full transition-transform duration-500 transform bg-white group-hover:-translate-x-2 group-hover:-translate-y-2">
-                <div className="px-8 pb-8 transition-opacity group-hover:opacity-0 group-hover:absolute w-full h-full">
-                  <div className="block relative rounded overflow-hidden w-full aspect-square lg:p-5">
-                    {
-                      id && <Image alt="neardate" className="h-full object-contain object-center w-full" src={get_ipfs_link_image(id.toString())} layout='fill' />
-                    }
-                    {
-                      isSale && (
-                        <div className="absolute left-1 bottom-2 border-green-900/10 bg-green-50 rounded-sm px-2 py-1 font-semibold text-green-700">
-                          {priceSale} NEAR
-                          <span className="animate-ping w-2.5 h-2.5 bg-green-600/75 rounded-full absolute -top-1 -left-1"></span>
-                          <span className="w-2.5 h-2.5 bg-green-600 rounded-full absolute -top-1 -left-1"></span>
-                        </div>
-                      )
-                    }
+          <div className='col-span-1 flex flex-col justify-start items-center w-full px-10'>
+            <div className="relative rounded-md w-full aspect-square">
+              <div className="absolute w-full rounded-md aspect-square border-2 border-imageLight bg-black blur-sm"></div>
+              {id && <Image alt="neardate" className="object-contain object-center rounded-md p-1" src={get_ipfs_link_image(id.toString())} layout='fill' />}
+              {
+                isSale && (
+                  <div className="absolute left-1 bottom-2 border-green-900/10 bg-green-50 rounded-sm px-2 py-1 font-semibold text-green-700">
+                    {priceSale} NEAR
+                    <span className="animate-ping w-2.5 h-2.5 bg-green-600/75 rounded-full absolute -top-1 -left-1"></span>
+                    <span className="w-2.5 h-2.5 bg-green-600 rounded-full absolute -top-1 -left-1"></span>
                   </div>
-                  <h2 className="mt-4 text-2xl font-medium text-center truncate text-ellipsis">{message?.message}</h2>
-                </div>
-                <div className="w-full absolute p-8 transition-opacity opacity-0 border-black border-2 group-hover:opacity-100 group-hover:relative h-full">
-                  <h2 className="mt-4 text-2xl font-medium">{message?.message}</h2>
-                  <p>Created at: {`${new Date(message?.token_created_date || Date.now()).toLocaleString("en-US")}`}</p>
-                  <p>Last updated at: {`${new Date(message?.message_updated_date || Date.now()).toLocaleString("en-US")}`}</p>
-                  <p className="mt-4">
-                  </p>
-                </div>
+                )
+              }
+            </div>
+            <div className='flex justify-between items-center w-full pt-2'>
+              <span className="text-primary text-sm font-semibold mt-2">
+                {truncate(owner_id, 40)}
+              </span>
+              <span className="text-secondary text-sm mt-1">
+                {`${new Date(message?.token_created_date || Date.now()).toLocaleString("en-US")}`}
+              </span>
+            </div>
+            <div className="flex flex-col w-full justify-between">
+              <div className="px-5 py-2 bg-backgroundLight rounded-3xl relative mt-2 w-full">
+                <p className="text-center text-2xl">{message?.message}</p>
+                <div className="absolute top-0 left-0 h-0.5 w-6 bg-primary"></div>
+                <div className="absolute top-0 left-0 h-3 w-0.5 bg-primary"></div>
+                <div className="absolute top-0 right-0 h-0.5 w-6 bg-primary"></div>
+                <div className="absolute top-0 right-0 h-3 w-0.5 bg-primary"></div>
+                <div className="absolute bottom-0 left-0 h-0.5 w-6 bg-primary"></div>
+                <div className="absolute bottom-0 left-0 h-3 w-0.5 bg-primary"></div>
+                <div className="absolute bottom-0 right-0 h-0.5 w-6 bg-primary"></div>
+                <div className="absolute bottom-0 right-0 h-3 w-0.5 bg-primary"></div>
               </div>
             </div>
-            <div className='mt-5 flex flex-col justify-start mx-auto container'>
+
+            <div className="flex flex-col gap-2 w-full pt-10">
               {
-                listSlotRent.map((e, i) => {
-                  return (<p key={e.starts_at} className='mt-1 font-semibold border border-blue-400 px-2 rounded-sm'>{e.renting_account_id}:{e.message}</p>);
+                listSlotRent.map(e => {
+                  return (
+                    <div className="rounded-md bg-backgroundLight py-1 px-2">
+                      <p className="text-primary">
+                        {e.message}
+                      </p>
+                      <p className="text-secondary text-sm">
+                        {e.renting_account_id}
+                      </p>
+                    </div>
+                  );
                 })
               }
-
             </div>
-
           </div>
           <div className='col-span-2'>
             <div className='flex flex-col justify-center items-start'>
@@ -550,10 +564,10 @@ const NFTItem: NextPage = () => {
                     )
                   }
                   <label className="relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="price">
-                    <span className="text-xs font-medium text-gray-500">
+                    <span className="text-xs font-medium text-primary">
                       Price
                     </span>
-                    <input className="w-full p-0 text-sm border-none focus:ring-0" id="price" type="number" placeholder="5"
+                    <input className="w-full p-0 text-sm border-none bg-transparent focus:ring-0" id="price" type="number" placeholder="5"
                       value={priceSale}
                       onChange={(e) => setPriceSale(parseFloat(e.target.value))}
                     />
@@ -564,10 +578,10 @@ const NFTItem: NextPage = () => {
                     Sell on Marketplace
                   </button>
                   <label className="mt-12 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="transfer">
-                    <span className="text-xs font-medium text-gray-500">
+                    <span className="text-xs font-medium text-primary">
                       Account ID
                     </span>
-                    <input className="w-full p-0 text-sm border-none focus:ring-0 outline-0" id="transfer" type="text" placeholder=""
+                    <input className="w-full p-0 text-sm border-none bg-transparent focus:ring-0 outline-0" id="transfer" type="text" placeholder=""
                       value={transferAccountId}
                       onChange={(e) => setTransferAccountId(e.target.value)}
                     />
@@ -582,27 +596,27 @@ const NFTItem: NextPage = () => {
             }
             {
               isOwner && <>
-                <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
+                <h2 className='mt-12 text-xl font-semibold'>
                   Buy Offer
                 </h2>
-                <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
-                  <table className="min-w-full text-sm divide-y divide-gray-200">
+                <div className="mt-2 overflow-hidden overflow-x-auto rounded">
+                  <table className="min-w-full text-sm divide-y divide-backgroundLight">
                     <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
-                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Account ID</th>
-                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
-                        <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Accept</th>
+                      <tr className=" bg-backgroundLight">
+                        <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">ID</th>
+                        <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Account ID</th>
+                        <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Price</th>
+                        <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Accept</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-backgroundLight">
                       {
                         listBid.map((e, i) => {
                           return (
                             <tr key={e.bid_id}>
-                              <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
-                              <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{e.bid_account_id}</td>
-                              <td className="px-4 py-2 text-gray-700 whitespace-nowrap">{utils.format.formatNearAmount(e.price)} NEAR</td>
+                              <td className="px-4 py-2 font-medium text-primary whitespace-nowrap">{e.bid_id}</td>
+                              <td className="px-4 py-2 text-primary whitespace-nowrap">{e.bid_account_id}</td>
+                              <td className="px-4 py-2 text-primary whitespace-nowrap">{utils.format.formatNearAmount(e.price)} NEAR</td>
                               <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
                                 onClick={() => onAccepBidClick(e.bid_id)}
                               >
@@ -622,37 +636,37 @@ const NFTItem: NextPage = () => {
             {
               account?.accountId && (
                 <>
-                  <h2 className='mt-12 text-xl font-semibold border-b-2 border-black'>
+                  <h2 className='mt-12 text-xl font-semibold'>
                     {!isOwner && "My  "} Rent Slot Bid
                   </h2>
-                  <div className="mt-2 overflow-hidden overflow-x-auto border border-gray-100 rounded">
-                    <table className="min-w-full text-sm divide-y divide-gray-200">
+                  <div className="mt-2 overflow-hidden overflow-x-auto rounded">
+                    <table className="min-w-full text-sm divide-y divide-backgroundLight">
                       <thead>
-                        <tr className="bg-gray-50">
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">ID</th>
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Message</th>
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Start At</th>
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Expires</th>
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">Price</th>
-                          <th className="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
+                        <tr className=" bg-backgroundLight">
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">ID</th>
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Message</th>
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Start At</th>
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Expires</th>
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">Price</th>
+                          <th className="px-4 py-2 font-medium text-left text-primary whitespace-nowrap">
                             {isOwner ? "Accept" : "Cancel"}
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody className="divide-y divide-backgroundLight">
                         {
                           listBidSlot.map((e, i) => {
                             return (
                               <tr key={i}>
-                                <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap">{e.bid_id}</td>
-                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{e.rent_message}</td>
-                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                                <td className="px-4 py-2 font-medium text-primary whitespace-nowrap">{e.bid_id}</td>
+                                <td className="px-4 py-2 text-primary whitespace-nowrap truncate">{e.rent_message}</td>
+                                <td className="px-4 py-2 text-primary whitespace-nowrap">
                                   {`${new Date(e.starts_at || Date.now()).toLocaleString("en-US")}`}
                                 </td>
-                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+                                <td className="px-4 py-2 text-primary whitespace-nowrap">
                                   {`${new Date(e.expires_at || Date.now()).toLocaleString("en-US")}`}
                                 </td>
-                                <td className="px-4 py-2 text-gray-700 whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
+                                <td className="px-4 py-2 text-primary whitespace-nowrap truncate">{utils.format.formatNearAmount(e.price)}</td>
                                 <td className="px-4 py-2 text-blue-700 whitespace-nowrap hover:text-blue-900 cursor-pointer"
                                   onClick={() => onBidSlotClick(e.bid_id)}
                                 >
