@@ -29,11 +29,11 @@ export default function BaseLayout({ children }: BaseLayoutProps) {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* <Header /> */}
-      <aside className='fixed bg-gradient-to-r from-backgroundLight to-background md:w-60 w-16'>
+      <Header />
+      {/* <aside className='fixed bg-gradient-to-r from-backgroundLight to-background md:w-60 w-16'>
         <SideBar />
-      </aside>
-      <main className='md:pl-60 pl-16'>
+      </aside> */}
+      <main className=''>
         {children}
       </main>
       {/* <Footer /> */}
