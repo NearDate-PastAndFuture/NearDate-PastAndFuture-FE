@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
 import MintIntroduction from "components/mint/MintIntroduction";
+import Calendar from "components/mint/Calendar";
 import Link from 'next/link';
 import { format_number_2_digit } from "utils/format";
 import ipfs, { get_ipfs_link, get_ipfs_link_image } from "utils/ipfs";
@@ -35,6 +36,20 @@ const Mint: NextPage = () => {
   const [message, setMessage] = useState<string>("");
 
   const [canNextClick, setCanNextClick] = useState<boolean>(false);
+
+  const stepProcessRef = useRef<null | HTMLDivElement>(null);
+  const stepProcessExecuteScroll = () => {
+    if (stepProcessRef && stepProcessRef.current) {
+      stepProcessRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  function setDayMonthYear(day: number, month: number, year: number) {
+    setDay(day);
+    setMonth(month + 1);
+    setYear(year);
+    stepProcessExecuteScroll();
+  }
 
   async function onNextClick() {
     if (canNextClick) {
@@ -107,7 +122,9 @@ const Mint: NextPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className='container px-5 mx-auto pb-24'>
+
         <MintIntroduction />
+        <Calendar setDayMonthYear={setDayMonthYear} />
 
         <div className='pt-24'>
           <div className="mb-12 px-4 py-3 text-white bg-yellow-500">
@@ -118,8 +135,8 @@ const Mint: NextPage = () => {
               </Link>
             </p>
           </div>
-          <h2 className="sr-only">Steps</h2>
-          <div className="relative after:inset-x-0 after:h-0.5 after:absolute after:top-1/2 after:-translate-y-1/2 after:block after:rounded-lg after:bg-gray-100">
+
+          <div ref={stepProcessRef} className="relative after:inset-x-0 after:h-0.5 after:absolute after:top-1/2 after:-translate-y-1/2 after:block after:rounded-lg after:bg-gray-100">
             <ol className="relative z-10 flex justify-between text-sm font-medium text-gray-500">
               <li className="flex items-center p-2 bg-backgroundLight rounded-sm">
                 <span className={`w-6 h-6 text-[10px] font-bold leading-6 text-center text-white rounded-full ${step == 1 ? "bg-blue-600" : "bg-background"}`}>
@@ -143,42 +160,18 @@ const Mint: NextPage = () => {
           </div>
         </div>
 
-        <div className='container pt-12 grid grid-cols-2 gap-4'>
+        <div className='container pt-12 grid md:grid-cols-2 grid-cols-1 gap-4'>
           {
             step == 1 && (
-              <div className='px-24 flex flex-col'>
-                <label className="relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="day">
-                  <span className="text-xs font-medium text-primary">
-                    Ngày
-                  </span>
-                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="day" type="number" placeholder="01"
-                    value={day}
-                    onChange={(e) => setDay(parseInt(e.target.value))}
-                  />
-                </label>
-                <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="mounth">
-                  <span className="text-xs font-medium text-primary">
-                    Tháng
-                  </span>
-                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="mounth" type="number" placeholder="01"
-                    value={month}
-                    onChange={(e) => setMonth(parseInt(e.target.value))} />
-                </label>
-                <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="year">
-                  <span className="text-xs font-medium text-primary">
-                    Năm
-                  </span>
-                  <input className="w-full p-0 text-sm text-secondary border-none bg-transparent focus:ring-0" id="year" type="number" placeholder="2022"
-                    value={year}
-                    onChange={(e) => setYear(parseInt(e.target.value))} />
-                </label>
+              <div className='md:px-24 px-12 flex flex-col'>
+                <span>Select your date above calendar</span>
               </div>
             )
           }
           {
             step == 2 && (
-              <div className='px-24 flex flex-col'>
-                <label className="mt-6 relative block p-3 border-2 border-gray-200 rounded-lg" htmlFor="message">
+              <div className='md:px-24 px-12 flex flex-col'>
+                <label className="mt-6 relative block p-3 md:border-2 border border-gray-200 rounded-lg" htmlFor="message">
                   <span className="text-xs font-medium text-primary">
                     Message
                   </span>
@@ -192,7 +185,7 @@ const Mint: NextPage = () => {
           }
           {
             step == 3 && (
-              <div className='px-24 flex flex-col items-start'>
+              <div className='md:px-24 px-12 flex flex-col items-start'>
                 <p className='text-xl font-semibold'>Message</p>
                 <p className='text-md'>{message}</p>
                 <button className='mt-5 bg-blue-500 px-5 py-2 rounded-md hover:bg-blue-600' onClick={() => setCanNextClick(true)}>
