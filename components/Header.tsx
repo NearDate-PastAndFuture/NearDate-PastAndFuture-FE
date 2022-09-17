@@ -54,7 +54,7 @@ export default function Header({ }: HeaderProps) {
             </span>
           </a>
         </Link>
-        <nav className="md:mr-auto md:ml-4 md:py-1 md:pl-4 flex gap-2 md:gap-10 items-center text-base justify-center w-full">
+        <nav className="md:mx-auto md:py-1 md:pl-4 flex gap-2 md:gap-10 items-center text-base justify-center w-full">
           <Link href="/">
             <a className={`flex py-2 space-x-2 items-center hover:bg-background
               ${(asPath == "/" || asPath.indexOf("/?") == 0) ? "bg-background text-primary" : "text-secondary"}
@@ -110,8 +110,8 @@ export default function Header({ }: HeaderProps) {
         </nav>
         {
           account?.accountId ?
-            (<div className="flex items-center w-full justify-center">
-              <div className="md:w-40 text-right top-16">
+            (<div className="flex items-center w-full justify-center max-w-fit">
+              <div className="text-right top-16">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
                     <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-primary rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -122,20 +122,19 @@ export default function Header({ }: HeaderProps) {
                       />
                     </Menu.Button>
                   </div>
-                  <Menu.Items className="absolute right-0 w-56 mt-4 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="absolute z-10 right-0 w-56 mt-4 origin-top-right bg-backgroundLight divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="px-1 py-1 ">
                       <Menu.Item>
                         {({ active }) => (
                           <a href={`https://explorer.testnet.near.org/accounts/${account?.accountId}`} target="_blank" rel="noreferrer" >
                             <button
-                              className={`${active ? 'bg-secondary text-white' : 'text-gray-900'
-                                } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                              className={`${active ? ' bg-secondary bg-opacity-50' : 'bg-transparent'
+                                } group flex rounded-md items-center w-full px-2 py-2 text-sm text-white`}
                             >
 
                               {account?.accountId}
                             </button>
                           </a>
-
                         )}
                       </Menu.Item>
                       <Menu.Item>
@@ -146,8 +145,8 @@ export default function Header({ }: HeaderProps) {
                                 logout()
                               }, 1000);
                             }}
-                            className={`${active ? 'bg-secondary text-white' : 'text-gray-900'
-                              } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                            className={`${active ? ' bg-secondary bg-opacity-50' : 'bg-transparent'
+                              } group flex rounded-md items-center w-full px-2 py-2 text-sm text-white`}
                           >
 
                             Disconnect
