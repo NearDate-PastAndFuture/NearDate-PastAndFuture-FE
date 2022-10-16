@@ -23,9 +23,10 @@ const MyNearDate: NextPage = () => {
 
   useEffect(() => {
     async function getAsyncToken(token_id_list: Array<String>) {
-      return Promise.all(token_id_list.map((e) => contractNFT.nft_token({
+      let data = await Promise.all(token_id_list.map((e) => contractNFT.nft_token({
         "token_id": e
-      })))
+      })));
+      return data.filter(e =>  e != null);
     }
 
     async function getListNFT() {

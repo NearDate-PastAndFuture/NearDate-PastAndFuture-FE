@@ -6,6 +6,8 @@ import BaseLayout from 'components/BaseLayout';
 import { useAppContext } from "context/state";
 import MintIntroduction from "components/mint/MintIntroduction";
 import Calendar from "components/mint/Calendar";
+import CountDown from "components/mint/CountDown";
+
 import Link from 'next/link';
 import { format_number_2_digit } from "utils/format";
 import ipfs, { get_ipfs_link, get_ipfs_link_image } from "utils/ipfs";
@@ -34,6 +36,8 @@ const Mint: NextPage = () => {
   const [year, setYear] = useState<number>(yearNow);
 
   const [message, setMessage] = useState<string>("");
+
+  const [timeoutToMint, setTimeoutToMint] = useState<number | null>(null);
 
   const [canNextClick, setCanNextClick] = useState<boolean>(false);
 
@@ -78,7 +82,8 @@ const Mint: NextPage = () => {
             "title": message,
           },
           "receiver_id": account.accountId,
-          "message_url": ipfs_link_uploaded
+          "message_url": ipfs_link_uploaded,
+          "price": 30000000000000,
         }, 30000000000000, utils.format.parseNearAmount("0.01"));
 
         router.push(`nft/${neardate}`);
@@ -100,6 +105,18 @@ const Mint: NextPage = () => {
           setCanNextClick(false);
           setIsMinted(true);
         }
+      } catch (err) {
+        console.log(err);
+      }
+      try {
+        const checkTime = await contractNFT.get_mint();
+        if (checkTime.length != 2) {
+          return;
+        } 
+        let time = checkTime[0];
+        let persentage = checkTime[1];
+        setTimeoutToMint(time);
+        console.log("checkTime", checkTime);
       } catch (err) {
         console.log(err);
       }
@@ -128,12 +145,12 @@ const Mint: NextPage = () => {
 
         <div className='pt-24'>
           <div className="mb-12 px-4 py-3 text-white bg-yellow-500">
-            <p className="text-sm font-medium text-center">
-              You only have 1 free mint
+            <div className="text-sm font-medium text-center">
+              Next time to mint in <CountDown timeEndAction={()=> {}} dateInit={new Date(timeoutToMint || Date.now())}/>
               <Link href="/marketplace" passHref>
-                <a className="underline"> Go to Martketplace → </a>
+                <a className="underline"> <span className='text-secondary'>or </span> Go to Martketplace → </a>
               </Link>
-            </p>
+            </div>
           </div>
 
           <div ref={stepProcessRef} className="relative after:inset-x-0 after:h-0.5 after:absolute after:top-1/2 after:-translate-y-1/2 after:block after:rounded-lg after:bg-gray-100">

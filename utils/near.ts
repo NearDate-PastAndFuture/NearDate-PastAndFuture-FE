@@ -25,7 +25,7 @@ export async function initializeContract() {
     window.walletConnection.account(),
     nearEnv.contractNFT,
     {
-      viewMethods: ["nft_token", "nft_tokens_for_owner", "get_random_nfts", "nft_tokens_by_date"], // TODO
+      viewMethods: ["nft_token", "nft_tokens_for_owner", "get_random_nfts", "nft_tokens_by_date", "get_mint"], // TODO
       changeMethods: ["nft_mint", "nft_transfer", "nft_approve", "nft_update"], // TODO
     }
   );

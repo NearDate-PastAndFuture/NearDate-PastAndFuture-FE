@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { get_ipfs_link_image } from "utils/ipfs";
 import { truncate } from "utils/format";
 import { useAppContext } from "context/state";
+import {motion} from "framer-motion";
 
 interface NFTShowCardProps {
     nft: NFTModel;
@@ -48,7 +49,12 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
     }, [contractMarketplace, nft]);
 
     return (
-        <div className="md:w-[36rem] w-[10rem] h-96 bg-backgroundLight rounded-md border-b-2">
+        <motion.div className="md:w-[36rem] w-[10rem] h-96 bg-backgroundLight rounded-md border-b-2" key={nft.token_id} 
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 0, opacity: 0 }}
+            transition={{ duration: 1 }}
+        >
             <div className="p-2 flex space-x-3 md:flex-row flex-col">
                 <Link href={`/nft/${nft?.token_id}`} passHref>
                     <a className="h-36 aspect-square bg-imageLight relative rounded-md cursor-pointer">
@@ -103,6 +109,6 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
                     }
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

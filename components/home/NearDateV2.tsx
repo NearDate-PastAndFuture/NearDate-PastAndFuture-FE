@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { NFTModel } from "types";
 import { format_number_2_digit } from "utils/format";
+import {motion} from "framer-motion";
 
 export default function NearDate() {
   const { account, contractNFT } = useAppContext();
@@ -69,19 +70,19 @@ export default function NearDate() {
 
   return (
     <section className="py-24 flex justify-center flex-col items-center">
-      <div className="my-16 flex gap-4 md:gap-16">
+      <motion.div className="my-16 flex gap-4 md:gap-16" layout>
         <div className="md:w-[18rem] w-[3rem] h-96 overflow-hidden relative " >
           <div className="md:w-[18rem] w-[3rem] absolute h-96 bg-gradient-to-l from-transparent to-background cursor-pointer"
             onClick={previousIndex}>
           </div>
           <div className="float-right">
             {
-              indexNearDatePrevious != null && <NFTShowCard nft={listNft[indexNearDatePrevious]} />
+              indexNearDatePrevious != null && <NFTShowCard key={indexNearDatePrevious} nft={listNft[indexNearDatePrevious]} />
             }
           </div>
         </div>
         {
-          indexNearDateNow != null && <NFTShowCard nft={listNft[indexNearDateNow]} />
+          indexNearDateNow != null && <NFTShowCard key={indexNearDateNow} nft={listNft[indexNearDateNow]} />
         }
         <div className="md:w-[18rem] w-[3rem] h-96 overflow-hidden relative">
           <div className="md:w-[18rem] w-[3rem] absolute h-96 bg-gradient-to-r from-transparent to-background cursor-pointer"
@@ -89,10 +90,10 @@ export default function NearDate() {
           >
           </div>
           {
-            indexNearDateNext != null && <NFTShowCard nft={listNft[indexNearDateNext]} />
+            indexNearDateNext != null && <NFTShowCard key={indexNearDateNext} nft={listNft[indexNearDateNext]} />
           }
         </div>
-      </div>
+      </motion.div>
       <div className="mt-4 max-w-xl mx-auto text-center">
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           <Link href='/mint'>
