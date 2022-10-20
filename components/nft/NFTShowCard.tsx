@@ -49,11 +49,7 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
     }, [contractMarketplace, nft]);
 
     return (
-        <motion.div className="md:w-[36rem] w-[10rem] h-96 bg-backgroundLight rounded-md border-b-2" key={nft.token_id} 
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 0, opacity: 0 }}
-            transition={{ duration: 1 }}
+        <div className="md:w-[36rem] w-[10rem] h-96 bg-backgroundLight rounded-md border-b-2" key={nft.token_id} 
         >
             <div className="p-2 flex space-x-3 md:flex-row flex-col">
                 <Link href={`/nft/${nft?.token_id}`} passHref>
@@ -109,6 +105,6 @@ export default function NFTShowCard({ nft }: NFTShowCardProps) {
                     }
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 }

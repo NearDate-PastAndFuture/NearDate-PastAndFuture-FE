@@ -70,7 +70,7 @@ export default function NearDate() {
 
   return (
     <section className="py-24 flex justify-center flex-col items-center">
-      <motion.div className="my-16 flex gap-4 md:gap-16" layout>
+      <div className="my-16 flex gap-4 md:gap-16">
         <div className="md:w-[18rem] w-[3rem] h-96 overflow-hidden relative " >
           <div className="md:w-[18rem] w-[3rem] absolute h-96 bg-gradient-to-l from-transparent to-background cursor-pointer"
             onClick={previousIndex}>
@@ -93,7 +93,7 @@ export default function NearDate() {
             indexNearDateNext != null && <NFTShowCard key={indexNearDateNext} nft={listNft[indexNearDateNext]} />
           }
         </div>
-      </motion.div>
+      </div>
       <div className="mt-4 max-w-xl mx-auto text-center">
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           <Link href='/mint'>
