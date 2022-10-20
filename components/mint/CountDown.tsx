@@ -52,7 +52,14 @@ export default function CountDown( {dateInit, dateEnd, timeEndAction } : Prop) {
 
     return (
         <div className=" text-lg">
-            <span className="text-imageLight">{hour}</span> : <span className="text-imageLight">{minute}</span> : <span className="text-imageLight">{second}</span>
+            { (hour != 0 && minute != 0 && second != 0) ? 
+                (
+                    <><span className="text-imageLight">{hour}</span> : <span className="text-imageLight">{minute}</span> : <span className="text-imageLight">{second}</span></>
+                ) : 
+                (
+                    <span className=" text-imageLight">Already to mint!</span>
+                )
+            }
         </div>
     );
 }

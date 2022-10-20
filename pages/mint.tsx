@@ -39,6 +39,8 @@ const Mint: NextPage = () => {
 
   const [timeoutToMint, setTimeoutToMint] = useState<number | null>(null);
 
+  const [firstMint, setFirstMint] = useState<boolean>(true);
+
   const [canNextClick, setCanNextClick] = useState<boolean>(false);
 
   const stepProcessRef = useRef<null | HTMLDivElement>(null);
@@ -83,8 +85,7 @@ const Mint: NextPage = () => {
           },
           "receiver_id": account.accountId,
           "message_url": ipfs_link_uploaded,
-          "price": 30000000000000,
-        }, 30000000000000, utils.format.parseNearAmount("0.01"));
+        }, 30000000000000, firstMint ? utils.format.parseNearAmount("0.01") : utils.format.parseNearAmount("1"));
 
         router.push(`nft/${neardate}`);
       }, "NearDate is now minting your date")
@@ -108,6 +109,7 @@ const Mint: NextPage = () => {
       } catch (err) {
         console.log(err);
       }
+
       try {
         const checkTime = await contractNFT.get_mint();
         if (checkTime.length != 2) {
@@ -116,13 +118,32 @@ const Mint: NextPage = () => {
         let time = checkTime[0];
         let persentage = checkTime[1];
         setTimeoutToMint(time);
-        console.log("checkTime", checkTime);
       } catch (err) {
         console.log(err);
       }
+
     }
     checkoutNFTExsit();
   }, [day, month, year, contractNFT]);
+
+  useEffect(()=> {
+    async function checkFirstMint() {
+      try {
+        if (!account || !contractNFT) {
+          return;
+        }
+
+        const checkFirstMint = await contractNFT.get_first_mint_address( {
+          "account_id": account.accountId,
+        });
+
+        setFirstMint(checkFirstMint);
+      } catch( err) {
+        console.log(err);
+      }
+    }
+    checkFirstMint();
+  }, [account, contractNFT]);
 
   useEffect(() => {
     if (message.length != 0) {
@@ -146,7 +167,8 @@ const Mint: NextPage = () => {
         <div className='pt-24'>
           <div className="mb-12 px-4 py-3 text-white bg-yellow-500">
             <div className="text-sm font-medium text-center">
-              Next time to mint in <CountDown timeEndAction={()=> {}} dateInit={new Date(timeoutToMint || Date.now())}/>
+              Next time to mint in 
+              <CountDown timeEndAction={()=> {}} dateInit={new Date(timeoutToMint || Date.now())}/>
               <Link href="/marketplace" passHref>
                 <a className="underline"> <span className='text-secondary'>or </span> Go to Martketplace → </a>
               </Link>
@@ -205,6 +227,8 @@ const Mint: NextPage = () => {
               <div className='md:px-24 px-12 flex flex-col items-start'>
                 <p className='text-xl font-semibold'>Message</p>
                 <p className='text-md'>{message}</p>
+                <p className='text-xl font-semibold mt-2 lg:mt-4'>Price</p>
+                <p className='text-md'>{firstMint ? "Free" : "1 NEAR"}</p>
                 <button className='mt-5 bg-blue-500 px-5 py-2 rounded-md hover:bg-blue-600' onClick={() => setCanNextClick(true)}>
                   Confirm
                 </button>
