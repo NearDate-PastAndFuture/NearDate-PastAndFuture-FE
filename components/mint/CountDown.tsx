@@ -8,7 +8,7 @@ interface Prop {
 }
 
 
-export default function CountDown( {dateInit, dateEnd, timeEndAction } : Prop) {
+export default function CountDown({ dateInit, dateEnd, timeEndAction }: Prop) {
     const countDownDate = new Date(dateInit).getTime();
 
     const [countDown, setCountDown] = useState(
@@ -23,11 +23,11 @@ export default function CountDown( {dateInit, dateEnd, timeEndAction } : Prop) {
         // calculate time left
         const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
-          (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
         );
         const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
-      
+
         return [days, hours, minutes, seconds];
     };
 
@@ -39,23 +39,23 @@ export default function CountDown( {dateInit, dateEnd, timeEndAction } : Prop) {
                 clearInterval(interval);
             }
         }, 1000);
-    
-        return () => clearInterval(interval);
-      }, [countDownDate]);
 
-      useEffect(()=> {
+        return () => clearInterval(interval);
+    }, [countDownDate]);
+
+    useEffect(() => {
         let [day, hour, minute, second] = getReturnValues(countDown);
         setHour(hour);
         setMinute(minute);
         setSecond(second);
-      }, [countDown]);
+    }, [countDown]);
 
     return (
         <div className=" text-lg">
-            { (hour != 0 && minute != 0 && second != 0) ? 
+            {(hour != 0 || minute != 0 || second != 0) ?
                 (
                     <><span className="text-imageLight">{hour}</span> : <span className="text-imageLight">{minute}</span> : <span className="text-imageLight">{second}</span></>
-                ) : 
+                ) :
                 (
                     <span className=" text-imageLight">Already to mint!</span>
                 )

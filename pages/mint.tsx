@@ -85,7 +85,7 @@ const Mint: NextPage = () => {
           },
           "receiver_id": account.accountId,
           "message_url": ipfs_link_uploaded,
-        }, 30000000000000, firstMint ? utils.format.parseNearAmount("0.01") : utils.format.parseNearAmount("1"));
+        }, 30000000000000, firstMint ? utils.format.parseNearAmount("0.01") : utils.format.parseNearAmount("1.01"));
 
         router.push(`nft/${neardate}`);
       }, "NearDate is now minting your date")
@@ -117,6 +117,7 @@ const Mint: NextPage = () => {
         } 
         let time = checkTime[0];
         let persentage = checkTime[1];
+        console.log(time);
         setTimeoutToMint(time);
       } catch (err) {
         console.log(err);
@@ -229,6 +230,8 @@ const Mint: NextPage = () => {
                 <p className='text-md'>{message}</p>
                 <p className='text-xl font-semibold mt-2 lg:mt-4'>Price</p>
                 <p className='text-md'>{firstMint ? "Free" : "1 NEAR"}</p>
+                <p className='text-xl font-semibold mt-2 lg:mt-4'>Storage fee</p>
+                <p className='text-md'>0.01 NEAR</p>
                 <button className='mt-5 bg-blue-500 px-5 py-2 rounded-md hover:bg-blue-600' onClick={() => setCanNextClick(true)}>
                   Confirm
                 </button>
